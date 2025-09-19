@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var connectivity = WatchConnectivityManager.shared
+    @StateObject private var iPmanager = iPhoneManager()
     
     var body: some View {
         NavigationStack {
@@ -24,9 +25,25 @@ struct ContentView: View {
                     connectivity.receivedMovement = "Waiting for Watch data..."
                     connectivity.movimentCount = 0
                 }
+                
+                Section("Mac Controller") {
+                    HStack {
+                        Text("Increment Count")
+                        
+                        Spacer()
+                        
+                        Button(action: {
+                            iPmanager.incrementAndSend()
+                        }) {
+                            Image(systemName: "plus.circle.fill").frame(width: 30, height: 30)
+                        }
+                    }
+                }
+                
+
             }
             .scrollContentBackground(.hidden)
-            .background(Color.gray.opacity(0.2))
+            .background(Color.gray.opacity(0.6))
             .navigationTitle("Motion Detector")
             .toolbarBackgroundVisibility(.visible, for: .navigationBar)
             .toolbarBackground(Color.gray.opacity(0.6), for: .navigationBar)

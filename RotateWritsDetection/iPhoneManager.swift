@@ -1,0 +1,77 @@
+//
+//  iPhoneManager.swift
+//  RotateWritsDetection
+//
+//  Created by Clara Muniz on 19/09/25.
+//
+
+import MultipeerConnectivity
+
+class iPhoneManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, ObservableObject {
+    private let serviceType = "number-sync"
+    private var peerID: MCPeerID!
+    private var mcBrowser: MCNearbyServiceBrowser!
+    private var mcSession: MCSession!
+    private var connectedPeer: MCPeerID?
+
+    private var numberToSend = 0
+
+    override init() {
+        super.init()
+        self.peerID = MCPeerID(displayName: UIDevice.current.name)
+        self.mcSession = MCSession(peer: self.peerID, securityIdentity: nil, encryptionPreference: .required)
+        self.mcSession.delegate = self
+        self.mcBrowser = MCNearbyServiceBrowser(peer: self.peerID, serviceType: self.serviceType)
+        self.mcBrowser.delegate = self
+        self.mcBrowser.startBrowsingForPeers()
+        print("iPhone está navegando pelo serviço \(serviceType)")
+    }
+
+    // MARK: - MCNearbyServiceBrowserDelegate
+
+    func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
+        print("Peer encontrado: \(peerID.displayName)")
+        browser.invitePeer(peerID, to: self.mcSession, withContext: nil, timeout: 10)
+    }
+
+    func browser(_ browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
+        print("Peer perdido: \(peerID.displayName)")
+    }
+
+    // MARK: - MCSessionDelegate
+
+    func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
+        switch state {
+        case .connected:
+            print("Conectado ao Mac: \(peerID.displayName)")
+            self.connectedPeer = peerID
+        case .notConnected:
+            print("Desconectado do Mac: \(peerID.displayName)")
+            self.connectedPeer = nil
+        case .connecting:
+            print("Conectando ao Mac: \(peerID.displayName)")
+        @unknown default:
+            print("Estado desconhecido: \(state)")
+        }
+    }
+
+    func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {}
+    func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {}
+    func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) {}
+    func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?) {}
+
+    // Método para ser chamado quando o botão '+' for pressionado
+    func incrementAndSend() {
+        self.numberToSend += 1
+        if let peer = self.connectedPeer {
+            do {
+                let data = "\(self.numberToSend)".data(using: .utf8)!
+                try self.mcSession.send(data, toPeers: [peer], with: .reliable)
+            } catch {
+                print("Erro ao enviar o número: \(error.localizedDescription)")
+            }
+        } else {
+            print("Nenhum Mac conectado.")
+        }
+    }
+}
