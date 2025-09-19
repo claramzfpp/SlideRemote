@@ -15,8 +15,15 @@ struct ContentView: View {
             List {
                 Section("Last Movement from Watch:") {
                     Text(connectivity.receivedMovement)
+                    
+                    Text("\(connectivity.movimentCount) movements detected")
                 }
                 
+                Button("Refresh") {
+                    ///volta todos os dados do iphone pro estado inicial
+                    connectivity.receivedMovement = "Waiting for Watch data..."
+                    connectivity.movimentCount = 0
+                }
             }
             .scrollContentBackground(.hidden)
             .background(Color.gray.opacity(0.2))

@@ -5,17 +5,13 @@
 //  Created by Clara Muniz on 18/09/25.
 //
 
+//https://gstvdfnbch.medium.com/gesture-detection-on-the-apple-watch-core-motion-7650a652e5b9
+
 import CoreMotion
 import WatchKit
 import Foundation
 
 enum MovementDirection: String, CaseIterable {
-    case up = "Up"
-    case down = "Down"
-    case left = "Left"
-    case right = "Right"
-    case forward = "Forward"
-    case backward = "Backward"
     case shake = "Shake"
     case none = "None"
 }
@@ -25,7 +21,6 @@ class WatchArmDetector: NSObject, ObservableObject {
     private let connectivityManager = WatchConnectivityManager.shared
     
     @Published var isActive: Bool = false
-    @Published var lastDetectedMovement: String = "No movement"
     @Published var currentDirection: MovementDirection = .none
     
     override init() {
@@ -42,13 +37,11 @@ class WatchArmDetector: NSObject, ObservableObject {
         }
         
         isActive = true
-        lastDetectedMovement = "Detection started..."
     }
     
     func stopMotionUpdates() {
         motionManager.stopDeviceMotionUpdates()
         isActive = false
-        lastDetectedMovement = "Detection stopped"
     }
     
     private func processWatchMotion(_ motion: CMDeviceMotion) {
@@ -64,29 +57,6 @@ class WatchArmDetector: NSObject, ObservableObject {
         var detectedDirection: MovementDirection = .none
         var movementDescription = ""
         
-        // Detecta direção baseada na aceleração
-        if totalAcceleration > 0.3 {
-            if userAcceleration.y > 0.4 {
-                detectedDirection = .up
-                movementDescription = "Arm moved UP"
-            } else if userAcceleration.y < -0.4 {
-                detectedDirection = .down
-                movementDescription = "Arm moved DOWN"
-            } else if userAcceleration.x > 0.4 {
-                detectedDirection = .right
-                movementDescription = "Arm moved RIGHT"
-            } else if userAcceleration.x < -0.4 {
-                detectedDirection = .left
-                movementDescription = "Arm moved LEFT"
-            } else if userAcceleration.z > 0.4 {
-                detectedDirection = .forward
-                movementDescription = "Arm moved FORWARD"
-            } else if userAcceleration.z < -0.4 {
-                detectedDirection = .backward
-                movementDescription = "Arm moved BACKWARD"
-            }
-        }
-        
         // Detecta movimento de sacudir
         if totalAcceleration > 0.5 || abs(attitude.roll) > 0.5 {
             detectedDirection = .shake
@@ -98,7 +68,6 @@ class WatchArmDetector: NSObject, ObservableObject {
             currentDirection = detectedDirection
             
             DispatchQueue.main.async {
-                self.lastDetectedMovement = movementDescription
                 
                 // Vibração no watch
                 WKInterfaceDevice.current().play(.success)
