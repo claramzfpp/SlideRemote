@@ -48,11 +48,6 @@ struct ContentView: View {
         }
         .foregroundStyle(armDetector.isActive ? .red : .green)
     }
-    
-    private var buttonView: some View {
-        Circle()
-            
-    }
 }
 
 #Preview {
