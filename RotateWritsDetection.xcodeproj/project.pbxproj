@@ -6,9 +6,48 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		B56340D12E7CFB6D00B112F8 /* RotateWristWatch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = B56340C42E7CFB6C00B112F8 /* RotateWristWatch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		B56340CF2E7CFB6D00B112F8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B56340A72E7CFB3500B112F8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B56340C32E7CFB6C00B112F8;
+			remoteInfo = "RotateWristWatch Watch App";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		B56340D52E7CFB6D00B112F8 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				B56340D12E7CFB6D00B112F8 /* RotateWristWatch Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		B56340AF2E7CFB3500B112F8 /* RotateWritsDetection.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RotateWritsDetection.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B56340C42E7CFB6C00B112F8 /* RotateWristWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "RotateWristWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B56340DD2E7CFC2300B112F8 /* Exceptions for "RotateWristWatch Watch App" folder in "RotateWritsDetection" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				WatchConnectivityManager.swift,
+			);
+			target = B56340AE2E7CFB3500B112F8 /* RotateWritsDetection */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		B56340B12E7CFB3500B112F8 /* RotateWritsDetection */ = {
@@ -16,10 +55,25 @@
 			path = RotateWritsDetection;
 			sourceTree = "<group>";
 		};
+		B56340C52E7CFB6C00B112F8 /* RotateWristWatch Watch App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B56340DD2E7CFC2300B112F8 /* Exceptions for "RotateWristWatch Watch App" folder in "RotateWritsDetection" target */,
+			);
+			path = "RotateWristWatch Watch App";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		B56340AC2E7CFB3500B112F8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B56340C12E7CFB6C00B112F8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -33,6 +87,7 @@
 			isa = PBXGroup;
 			children = (
 				B56340B12E7CFB3500B112F8 /* RotateWritsDetection */,
+				B56340C52E7CFB6C00B112F8 /* RotateWristWatch Watch App */,
 				B56340B02E7CFB3500B112F8 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +96,7 @@
 			isa = PBXGroup;
 			children = (
 				B56340AF2E7CFB3500B112F8 /* RotateWritsDetection.app */,
+				B56340C42E7CFB6C00B112F8 /* RotateWristWatch Watch App.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -55,10 +111,12 @@
 				B56340AB2E7CFB3500B112F8 /* Sources */,
 				B56340AC2E7CFB3500B112F8 /* Frameworks */,
 				B56340AD2E7CFB3500B112F8 /* Resources */,
+				B56340D52E7CFB6D00B112F8 /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				B56340D02E7CFB6D00B112F8 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				B56340B12E7CFB3500B112F8 /* RotateWritsDetection */,
@@ -68,6 +126,28 @@
 			);
 			productName = RotateWritsDetection;
 			productReference = B56340AF2E7CFB3500B112F8 /* RotateWritsDetection.app */;
+			productType = "com.apple.product-type.application";
+		};
+		B56340C32E7CFB6C00B112F8 /* RotateWristWatch Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B56340D22E7CFB6D00B112F8 /* Build configuration list for PBXNativeTarget "RotateWristWatch Watch App" */;
+			buildPhases = (
+				B56340C02E7CFB6C00B112F8 /* Sources */,
+				B56340C12E7CFB6C00B112F8 /* Frameworks */,
+				B56340C22E7CFB6C00B112F8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				B56340C52E7CFB6C00B112F8 /* RotateWristWatch Watch App */,
+			);
+			name = "RotateWristWatch Watch App";
+			packageProductDependencies = (
+			);
+			productName = "RotateWristWatch Watch App";
+			productReference = B56340C42E7CFB6C00B112F8 /* RotateWristWatch Watch App.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -81,6 +161,9 @@
 				LastUpgradeCheck = 1610;
 				TargetAttributes = {
 					B56340AE2E7CFB3500B112F8 = {
+						CreatedOnToolsVersion = 16.1;
+					};
+					B56340C32E7CFB6C00B112F8 = {
 						CreatedOnToolsVersion = 16.1;
 					};
 				};
@@ -100,12 +183,20 @@
 			projectRoot = "";
 			targets = (
 				B56340AE2E7CFB3500B112F8 /* RotateWritsDetection */,
+				B56340C32E7CFB6C00B112F8 /* RotateWristWatch Watch App */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		B56340AD2E7CFB3500B112F8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B56340C22E7CFB6C00B112F8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -122,7 +213,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B56340C02E7CFB6C00B112F8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B56340D02E7CFB6D00B112F8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B56340C32E7CFB6C00B112F8 /* RotateWristWatch Watch App */;
+			targetProxy = B56340CF2E7CFB6D00B112F8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		B56340BB2E7CFB3600B112F8 /* Debug */ = {
@@ -302,6 +408,66 @@
 			};
 			name = Release;
 		};
+		B56340D32E7CFB6D00B112F8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"RotateWristWatch Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = YU4562BP4N;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = RotateWristWatch;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = project.RotateWritsDetection;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = project.RotateWritsDetection.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.1;
+			};
+			name = Debug;
+		};
+		B56340D42E7CFB6D00B112F8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"RotateWristWatch Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = YU4562BP4N;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = RotateWristWatch;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = project.RotateWritsDetection;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = project.RotateWritsDetection.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.1;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -319,6 +485,15 @@
 			buildConfigurations = (
 				B56340BE2E7CFB3600B112F8 /* Debug */,
 				B56340BF2E7CFB3600B112F8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B56340D22E7CFB6D00B112F8 /* Build configuration list for PBXNativeTarget "RotateWristWatch Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B56340D32E7CFB6D00B112F8 /* Debug */,
+				B56340D42E7CFB6D00B112F8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
