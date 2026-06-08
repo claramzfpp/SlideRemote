@@ -43,13 +43,18 @@ class MacManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate
     // MARK: - MCSessionDelegate
 
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
-        if let receivedNumber = String(data: data, encoding: .utf8),
-           let number = Int(receivedNumber) {
-            
-            // As atualizações de UI precisam ser na thread principal
+        if let receivedCommand = String(data: data, encoding: .utf8) {
+            print("Comando recebido do iPhone: \(receivedCommand)")
+
             DispatchQueue.main.async {
-                self.currentNumber = number
-                print("Número recebido do iPhone: \(self.currentNumber)")
+                switch receivedCommand {
+                case "nextSlide":
+                    self.executeAppleScript("tell application \"Keynote\" to show next")
+                case "previousSlide":
+                    self.executeAppleScript("tell application \"Keynote\" to show previous")
+                default:
+                    print("Comando desconhecido: \(receivedCommand)")
+                }
             }
         }
     }
@@ -63,4 +68,20 @@ class MacManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate
     func session(_ session: MCSession, didReceive stream: InputStream, withName streamName: String, fromPeer peerID: MCPeerID) {}
     func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) {}
     func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?) {}
+}
+
+extension MacManager {
+    func executeAppleScript(_ script: String) {
+        guard let appleScript = NSAppleScript(source: script) else {
+            print("Erro ao criar o script AppleScript")
+            return
+        }
+
+        var errorDict: NSDictionary?
+        appleScript.executeAndReturnError(&errorDict)
+
+        if let error = errorDict {
+            print("Erro ao executar AppleScript: \(error)")
+        }
+    }
 }

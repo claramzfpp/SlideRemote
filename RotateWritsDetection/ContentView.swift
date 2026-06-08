@@ -13,6 +13,19 @@ struct ContentView: View {
     
     var body: some View {
         NavigationStack {
+            HStack {
+                Button("Slide Anterior") {
+                    iPmanager.sendPreviousSlideCommand()
+                }
+                
+                Spacer()
+                
+                Button("Próximo Slide") {
+                    iPmanager.sendNextSlideCommand()
+                }
+            }
+            .padding(.horizontal, 30)
+            
             List {
                 Section("Last Movement from Watch:") {
                     Text(connectivity.receivedMovement)
@@ -25,22 +38,6 @@ struct ContentView: View {
                     connectivity.receivedMovement = "Waiting for Watch data..."
                     connectivity.movimentCount = 0
                 }
-                
-                Section("Mac Controller") {
-                    HStack {
-                        Text("Increment Count")
-                        
-                        Spacer()
-                        
-                        Button(action: {
-                            iPmanager.incrementAndSend()
-                        }) {
-                            Image(systemName: "plus.circle.fill").frame(width: 30, height: 30)
-                        }
-                    }
-                }
-                
-
             }
             .scrollContentBackground(.hidden)
             .background(Color.gray.opacity(0.6))

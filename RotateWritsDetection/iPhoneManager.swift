@@ -14,8 +14,6 @@ class iPhoneManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate
     private var mcSession: MCSession!
     private var connectedPeer: MCPeerID?
 
-    private var numberToSend = 0
-
     override init() {
         super.init()
         self.peerID = MCPeerID(displayName: UIDevice.current.name)
@@ -60,18 +58,28 @@ class iPhoneManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate
     func session(_ session: MCSession, didStartReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, with progress: Progress) {}
     func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL?, withError error: Error?) {}
 
-    // Método para ser chamado quando o botão '+' for pressionado
-    func incrementAndSend() {
-        self.numberToSend += 1
-        if let peer = self.connectedPeer {
-            do {
-                let data = "\(self.numberToSend)".data(using: .utf8)!
-                try self.mcSession.send(data, toPeers: [peer], with: .reliable)
-            } catch {
-                print("Erro ao enviar o número: \(error.localizedDescription)")
-            }
-        } else {
+    // Método para avançar o slide
+    func sendNextSlideCommand() {
+        sendCommand(command: "nextSlide")
+    }
+
+    // Método para voltar o slide
+    func sendPreviousSlideCommand() {
+        sendCommand(command: "previousSlide")
+    }
+
+    // Método utilitário genérico
+    private func sendCommand(command: String) {
+        guard let peer = self.connectedPeer else {
             print("Nenhum Mac conectado.")
+            return
+        }
+        do {
+            let data = command.data(using: .utf8)!
+            try self.mcSession.send(data, toPeers: [peer], with: .reliable)
+            print("Comando enviado: \(command)")
+        } catch {
+            print("Erro ao enviar o comando: \(error.localizedDescription)")
         }
     }
 }
