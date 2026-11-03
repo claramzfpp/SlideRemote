@@ -4,6 +4,8 @@
 //
 //  Created by Clara Muniz on 19/09/25.
 //
+// aqui vamos procurar o ipad (parte do iphone)
+//
 
 import MultipeerConnectivity
 import Combine
@@ -11,7 +13,7 @@ import Combine
 class iPhoneManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, ObservableObject {
     @Published private(set) var isConnected = false
 
-    private let serviceType = "number-sync"
+    private let serviceType = "number-sync" // mesma label de serviço que o ipad
     private var peerID: MCPeerID!
     private var mcBrowser: MCNearbyServiceBrowser!
     private var mcSession: MCSession!
@@ -31,6 +33,7 @@ class iPhoneManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate
     // MARK: - MCNearbyServiceBrowserDelegate
 
     func browser(_ browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?) {
+        // aqui eu to procurando o servico anunciado pelo ipad
         print("Peer encontrado: \(peerID.displayName)")
         browser.invitePeer(peerID, to: self.mcSession, withContext: nil, timeout: 10)
     }

@@ -6,6 +6,7 @@
 //
 
 import WatchConnectivity ///gerenciar a comunicação entre um aplicativo de iPhone e um aplicativo de Apple Watch
+// Watch (gesto) → WatchConnectivityManager → iPhone → iPhoneManager (Multipeer) → iPad
 import Foundation
 
 class WatchConnectivityManager: NSObject, ObservableObject { ///isso daqui é tudo que o watch ENVIA pro iphone
@@ -22,7 +23,7 @@ class WatchConnectivityManager: NSObject, ObservableObject { ///isso daqui é tu
     override init() {
         super.init()
         
-        if WCSession.isSupported() { ///garante que tudo está configurado corretamente para rodar o aplicativo
+        if WCSession.isSupported() { // garante que tudo está configurado corretamente para rodar o aplicativo
             WCSession.default.delegate = self
             WCSession.default.activate()
         }
