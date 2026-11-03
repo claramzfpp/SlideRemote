@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct RotateWritsDetectionApp: App {
+struct SlideRemoteApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

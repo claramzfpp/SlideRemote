@@ -49,8 +49,10 @@ class MacManager: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate
             DispatchQueue.main.async {
                 switch receivedCommand {
                 case "nextSlide":
+                    self.currentNumber += 1
                     self.executeAppleScript("tell application \"Keynote\" to show next")
                 case "previousSlide":
+                    self.currentNumber -= 1
                     self.executeAppleScript("tell application \"Keynote\" to show previous")
                 default:
                     print("Comando desconhecido: \(receivedCommand)")

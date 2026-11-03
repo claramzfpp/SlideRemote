@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B56340D12E7CFB6D00B112F8 /* RotateWristWatch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = B56340C42E7CFB6C00B112F8 /* RotateWristWatch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		B56340D12E7CFB6D00B112F8 /* SlideRemoteWatch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = B56340C42E7CFB6C00B112F8 /* SlideRemoteWatch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -16,7 +16,7 @@
 			containerPortal = B56340A72E7CFB3500B112F8 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = B56340C32E7CFB6C00B112F8;
-			remoteInfo = "RotateWristWatch Watch App";
+			remoteInfo = "SlideRemoteWatch Watch App";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -27,7 +27,7 @@
 			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
 			dstSubfolderSpec = 16;
 			files = (
-				B56340D12E7CFB6D00B112F8 /* RotateWristWatch Watch App.app in Embed Watch Content */,
+				B56340D12E7CFB6D00B112F8 /* SlideRemoteWatch Watch App.app in Embed Watch Content */,
 			);
 			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -35,58 +35,58 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		B56340AF2E7CFB3500B112F8 /* RotateWritsDetection.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RotateWritsDetection.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		B56340C42E7CFB6C00B112F8 /* RotateWristWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "RotateWristWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B56340EA2E7D1DA400B112F8 /* SlidesController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SlidesController.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B56340AF2E7CFB3500B112F8 /* SlideRemote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SlideRemote.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B56340C42E7CFB6C00B112F8 /* SlideRemoteWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SlideRemoteWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B56340EA2E7D1DA400B112F8 /* SlideRemoteMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SlideRemoteMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		B56340DD2E7CFC2300B112F8 /* Exceptions for "RotateWristWatch Watch App" folder in "RotateWritsDetection" target */ = {
+		B56340DD2E7CFC2300B112F8 /* Exceptions for "SlideRemoteWatch Watch App" folder in "SlideRemote" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				WatchConnectivityManager.swift,
 			);
-			target = B56340AE2E7CFB3500B112F8 /* RotateWritsDetection */;
+			target = B56340AE2E7CFB3500B112F8 /* SlideRemote */;
 		};
-		B56341002E7D1FC300B112F8 /* Exceptions for "SlidesController" folder in "SlidesController" target */ = {
+		B56341002E7D1FC300B112F8 /* Exceptions for "SlideRemoteMac" folder in "SlideRemoteMac" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = B56340E92E7D1DA400B112F8 /* SlidesController */;
+			target = B56340E92E7D1DA400B112F8 /* SlideRemoteMac */;
 		};
-		B56341022E7D217300B112F8 /* Exceptions for "RotateWritsDetection" folder in "RotateWritsDetection" target */ = {
+		B56341022E7D217300B112F8 /* Exceptions for "SlideRemote" folder in "SlideRemote" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = B56340AE2E7CFB3500B112F8 /* RotateWritsDetection */;
+			target = B56340AE2E7CFB3500B112F8 /* SlideRemote */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		B56340B12E7CFB3500B112F8 /* RotateWritsDetection */ = {
+		B56340B12E7CFB3500B112F8 /* SlideRemote */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				B56341022E7D217300B112F8 /* Exceptions for "RotateWritsDetection" folder in "RotateWritsDetection" target */,
+				B56341022E7D217300B112F8 /* Exceptions for "SlideRemote" folder in "SlideRemote" target */,
 			);
-			path = RotateWritsDetection;
+			path = SlideRemote;
 			sourceTree = "<group>";
 		};
-		B56340C52E7CFB6C00B112F8 /* RotateWristWatch Watch App */ = {
+		B56340C52E7CFB6C00B112F8 /* SlideRemoteWatch Watch App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				B56340DD2E7CFC2300B112F8 /* Exceptions for "RotateWristWatch Watch App" folder in "RotateWritsDetection" target */,
+				B56340DD2E7CFC2300B112F8 /* Exceptions for "SlideRemoteWatch Watch App" folder in "SlideRemote" target */,
 			);
-			path = "RotateWristWatch Watch App";
+			path = "SlideRemoteWatch Watch App";
 			sourceTree = "<group>";
 		};
-		B56340EB2E7D1DA400B112F8 /* SlidesController */ = {
+		B56340EB2E7D1DA400B112F8 /* SlideRemoteMac */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				B56341002E7D1FC300B112F8 /* Exceptions for "SlidesController" folder in "SlidesController" target */,
+				B56341002E7D1FC300B112F8 /* Exceptions for "SlideRemoteMac" folder in "SlideRemoteMac" target */,
 			);
-			path = SlidesController;
+			path = SlideRemoteMac;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -119,9 +119,9 @@
 		B56340A62E7CFB3500B112F8 = {
 			isa = PBXGroup;
 			children = (
-				B56340B12E7CFB3500B112F8 /* RotateWritsDetection */,
-				B56340C52E7CFB6C00B112F8 /* RotateWristWatch Watch App */,
-				B56340EB2E7D1DA400B112F8 /* SlidesController */,
+				B56340B12E7CFB3500B112F8 /* SlideRemote */,
+				B56340C52E7CFB6C00B112F8 /* SlideRemoteWatch Watch App */,
+				B56340EB2E7D1DA400B112F8 /* SlideRemoteMac */,
 				B56340B02E7CFB3500B112F8 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -129,9 +129,9 @@
 		B56340B02E7CFB3500B112F8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B56340AF2E7CFB3500B112F8 /* RotateWritsDetection.app */,
-				B56340C42E7CFB6C00B112F8 /* RotateWristWatch Watch App.app */,
-				B56340EA2E7D1DA400B112F8 /* SlidesController.app */,
+				B56340AF2E7CFB3500B112F8 /* SlideRemote.app */,
+				B56340C42E7CFB6C00B112F8 /* SlideRemoteWatch Watch App.app */,
+				B56340EA2E7D1DA400B112F8 /* SlideRemoteMac.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -139,9 +139,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B56340AE2E7CFB3500B112F8 /* RotateWritsDetection */ = {
+		B56340AE2E7CFB3500B112F8 /* SlideRemote */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B56340BD2E7CFB3600B112F8 /* Build configuration list for PBXNativeTarget "RotateWritsDetection" */;
+			buildConfigurationList = B56340BD2E7CFB3600B112F8 /* Build configuration list for PBXNativeTarget "SlideRemote" */;
 			buildPhases = (
 				B56340AB2E7CFB3500B112F8 /* Sources */,
 				B56340AC2E7CFB3500B112F8 /* Frameworks */,
@@ -154,18 +154,18 @@
 				B56340D02E7CFB6D00B112F8 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				B56340B12E7CFB3500B112F8 /* RotateWritsDetection */,
+				B56340B12E7CFB3500B112F8 /* SlideRemote */,
 			);
-			name = RotateWritsDetection;
+			name = SlideRemote;
 			packageProductDependencies = (
 			);
-			productName = RotateWritsDetection;
-			productReference = B56340AF2E7CFB3500B112F8 /* RotateWritsDetection.app */;
+			productName = SlideRemote;
+			productReference = B56340AF2E7CFB3500B112F8 /* SlideRemote.app */;
 			productType = "com.apple.product-type.application";
 		};
-		B56340C32E7CFB6C00B112F8 /* RotateWristWatch Watch App */ = {
+		B56340C32E7CFB6C00B112F8 /* SlideRemoteWatch Watch App */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B56340D22E7CFB6D00B112F8 /* Build configuration list for PBXNativeTarget "RotateWristWatch Watch App" */;
+			buildConfigurationList = B56340D22E7CFB6D00B112F8 /* Build configuration list for PBXNativeTarget "SlideRemoteWatch Watch App" */;
 			buildPhases = (
 				B56340C02E7CFB6C00B112F8 /* Sources */,
 				B56340C12E7CFB6C00B112F8 /* Frameworks */,
@@ -176,18 +176,18 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				B56340C52E7CFB6C00B112F8 /* RotateWristWatch Watch App */,
+				B56340C52E7CFB6C00B112F8 /* SlideRemoteWatch Watch App */,
 			);
-			name = "RotateWristWatch Watch App";
+			name = "SlideRemoteWatch Watch App";
 			packageProductDependencies = (
 			);
-			productName = "RotateWristWatch Watch App";
-			productReference = B56340C42E7CFB6C00B112F8 /* RotateWristWatch Watch App.app */;
+			productName = "SlideRemoteWatch Watch App";
+			productReference = B56340C42E7CFB6C00B112F8 /* SlideRemoteWatch Watch App.app */;
 			productType = "com.apple.product-type.application";
 		};
-		B56340E92E7D1DA400B112F8 /* SlidesController */ = {
+		B56340E92E7D1DA400B112F8 /* SlideRemoteMac */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B56340F62E7D1DA500B112F8 /* Build configuration list for PBXNativeTarget "SlidesController" */;
+			buildConfigurationList = B56340F62E7D1DA500B112F8 /* Build configuration list for PBXNativeTarget "SlideRemoteMac" */;
 			buildPhases = (
 				B56340E62E7D1DA400B112F8 /* Sources */,
 				B56340E72E7D1DA400B112F8 /* Frameworks */,
@@ -198,13 +198,13 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				B56340EB2E7D1DA400B112F8 /* SlidesController */,
+				B56340EB2E7D1DA400B112F8 /* SlideRemoteMac */,
 			);
-			name = SlidesController;
+			name = SlideRemoteMac;
 			packageProductDependencies = (
 			);
-			productName = SlidesController;
-			productReference = B56340EA2E7D1DA400B112F8 /* SlidesController.app */;
+			productName = SlideRemoteMac;
+			productReference = B56340EA2E7D1DA400B112F8 /* SlideRemoteMac.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -242,9 +242,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B56340AE2E7CFB3500B112F8 /* RotateWritsDetection */,
-				B56340C32E7CFB6C00B112F8 /* RotateWristWatch Watch App */,
-				B56340E92E7D1DA400B112F8 /* SlidesController */,
+				B56340AE2E7CFB3500B112F8 /* SlideRemote */,
+				B56340C32E7CFB6C00B112F8 /* SlideRemoteWatch Watch App */,
+				B56340E92E7D1DA400B112F8 /* SlideRemoteMac */,
 			);
 		};
 /* End PBXProject section */
@@ -300,7 +300,7 @@
 /* Begin PBXTargetDependency section */
 		B56340D02E7CFB6D00B112F8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B56340C32E7CFB6C00B112F8 /* RotateWristWatch Watch App */;
+			target = B56340C32E7CFB6C00B112F8 /* SlideRemoteWatch Watch App */;
 			targetProxy = B56340CF2E7CFB6D00B112F8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -432,11 +432,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"RotateWritsDetection/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"SlideRemote/Preview Content\"";
 				DEVELOPMENT_TEAM = PWMGJ535ZV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = RotateWritsDetection/Info.plist;
+				INFOPLIST_FILE = SlideRemote/Info.plist;
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Permitir a conexão com o Mac para sincronizar o contador";
 				INFOPLIST_KEY_NSMotionUsageDescription = "Allow to detect motion";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -464,11 +464,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"RotateWritsDetection/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"SlideRemote/Preview Content\"";
 				DEVELOPMENT_TEAM = PWMGJ535ZV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = RotateWritsDetection/Info.plist;
+				INFOPLIST_FILE = SlideRemote/Info.plist;
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Permitir a conexão com o Mac para sincronizar o contador";
 				INFOPLIST_KEY_NSMotionUsageDescription = "Allow to detect motion";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -496,11 +496,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"RotateWristWatch Watch App/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"SlideRemoteWatch Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = PWMGJ535ZV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = RotateWristWatch;
+				INFOPLIST_KEY_CFBundleDisplayName = SlideRemote;
 				INFOPLIST_KEY_NSMotionUsageDescription = "Allow to detect motion";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = project.RotateWritsDetection;
@@ -527,11 +527,11 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"RotateWristWatch Watch App/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"SlideRemoteWatch Watch App/Preview Content\"";
 				DEVELOPMENT_TEAM = PWMGJ535ZV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = RotateWristWatch;
+				INFOPLIST_KEY_CFBundleDisplayName = SlideRemote;
 				INFOPLIST_KEY_NSMotionUsageDescription = "Allow to detect motion";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = project.RotateWritsDetection;
@@ -556,16 +556,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = SlidesController/SlidesController.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SlideRemoteMac/SlideRemoteMac.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"SlidesController/Preview Content\"";
-				DEVELOPMENT_TEAM = YU4562BP4N;
+				DEVELOPMENT_ASSET_PATHS = "\"SlideRemoteMac/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = SlidesController/Info.plist;
+				INFOPLIST_FILE = SlideRemoteMac/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "$(PRODUCT_BUNDLE_PACKAGE_TYPE)";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -587,16 +587,16 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = SlidesController/SlidesController.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SlideRemoteMac/SlideRemoteMac.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"SlidesController/Preview Content\"";
-				DEVELOPMENT_TEAM = YU4562BP4N;
+				DEVELOPMENT_ASSET_PATHS = "\"SlideRemoteMac/Preview Content\"";
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = SlidesController/Info.plist;
+				INFOPLIST_FILE = SlideRemoteMac/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "$(PRODUCT_BUNDLE_PACKAGE_TYPE)";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -625,7 +625,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B56340BD2E7CFB3600B112F8 /* Build configuration list for PBXNativeTarget "RotateWritsDetection" */ = {
+		B56340BD2E7CFB3600B112F8 /* Build configuration list for PBXNativeTarget "SlideRemote" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B56340BE2E7CFB3600B112F8 /* Debug */,
@@ -634,7 +634,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B56340D22E7CFB6D00B112F8 /* Build configuration list for PBXNativeTarget "RotateWristWatch Watch App" */ = {
+		B56340D22E7CFB6D00B112F8 /* Build configuration list for PBXNativeTarget "SlideRemoteWatch Watch App" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B56340D32E7CFB6D00B112F8 /* Debug */,
@@ -643,7 +643,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B56340F62E7D1DA500B112F8 /* Build configuration list for PBXNativeTarget "SlidesController" */ = {
+		B56340F62E7D1DA500B112F8 /* Build configuration list for PBXNativeTarget "SlideRemoteMac" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B56340F72E7D1DA500B112F8 /* Debug */,

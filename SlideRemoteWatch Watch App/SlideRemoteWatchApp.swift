@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct RotateWristWatch_Watch_AppApp: App {
+struct SlideRemoteWatchApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

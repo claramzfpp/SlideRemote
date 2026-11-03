@@ -12,7 +12,7 @@ struct ContentView: View {
 
     var body: some View {
         VStack {
-            Text("Número Atual:")
+            Text("Contador (→ aumenta, ← diminui):")
                 .font(.title)
             Text("\(macManager.currentNumber)") // Exibe o número recebido
                 .font(.system(size: 72, weight: .bold))

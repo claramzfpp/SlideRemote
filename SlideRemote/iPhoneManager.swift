@@ -6,8 +6,11 @@
 //
 
 import MultipeerConnectivity
+import Combine
 
 class iPhoneManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate, ObservableObject {
+    @Published private(set) var isConnected = false
+
     private let serviceType = "number-sync"
     private var peerID: MCPeerID!
     private var mcBrowser: MCNearbyServiceBrowser!
@@ -41,15 +44,19 @@ class iPhoneManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         switch state {
         case .connected:
-            print("Conectado ao Mac: \(peerID.displayName)")
+            print("Conectado a: \(peerID.displayName)")
             self.connectedPeer = peerID
         case .notConnected:
-            print("Desconectado do Mac: \(peerID.displayName)")
+            print("Desconectado de: \(peerID.displayName)")
             self.connectedPeer = nil
         case .connecting:
-            print("Conectando ao Mac: \(peerID.displayName)")
+            print("Conectando a: \(peerID.displayName)")
         @unknown default:
             print("Estado desconhecido: \(state)")
+        }
+
+        DispatchQueue.main.async {
+            self.isConnected = self.connectedPeer != nil
         }
     }
 

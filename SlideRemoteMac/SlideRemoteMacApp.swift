@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct SlidesControllerApp: App {
+struct SlideRemoteMacApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
