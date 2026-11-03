@@ -1,6 +1,6 @@
 //
-//  RotateWritsDetectionApp.swift
-//  RotateWritsDetection
+//  SlideRemoteApp.swift
+//  SlideRemote
 //
 //  Created by Clara Muniz on 18/09/25.
 //

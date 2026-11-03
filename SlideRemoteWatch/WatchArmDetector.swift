@@ -1,6 +1,6 @@
 //
 //  WatchArmDetector.swift
-//  RotateWritsDetection
+//  SlideRemote
 //
 //  Created by Clara Muniz on 18/09/25.
 //

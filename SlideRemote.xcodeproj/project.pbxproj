@@ -40,7 +40,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		B56340DD2E7CFC2300B112F8 /* Exceptions for "SlideRemoteWatch Watch App" folder in "SlideRemote" target */ = {
+		B56340DD2E7CFC2300B112F8 /* Exceptions for "SlideRemoteWatch" folder in "SlideRemote" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				WatchConnectivityManager.swift,
@@ -65,12 +65,12 @@
 			path = SlideRemote;
 			sourceTree = "<group>";
 		};
-		B56340C52E7CFB6C00B112F8 /* SlideRemoteWatch Watch App */ = {
+		B56340C52E7CFB6C00B112F8 /* SlideRemoteWatch */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				B56340DD2E7CFC2300B112F8 /* Exceptions for "SlideRemoteWatch Watch App" folder in "SlideRemote" target */,
+				B56340DD2E7CFC2300B112F8 /* Exceptions for "SlideRemoteWatch" folder in "SlideRemote" target */,
 			);
-			path = "SlideRemoteWatch Watch App";
+			path = SlideRemoteWatch;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -97,7 +97,7 @@
 			isa = PBXGroup;
 			children = (
 				B56340B12E7CFB3500B112F8 /* SlideRemote */,
-				B56340C52E7CFB6C00B112F8 /* SlideRemoteWatch Watch App */,
+				B56340C52E7CFB6C00B112F8 /* SlideRemoteWatch */,
 				B56340B02E7CFB3500B112F8 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -151,7 +151,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				B56340C52E7CFB6C00B112F8 /* SlideRemoteWatch Watch App */,
+				B56340C52E7CFB6C00B112F8 /* SlideRemoteWatch */,
 			);
 			name = "SlideRemoteWatch Watch App";
 			packageProductDependencies = (
@@ -178,7 +178,7 @@
 					};
 				};
 			};
-			buildConfigurationList = B56340AA2E7CFB3500B112F8 /* Build configuration list for PBXProject "RotateWritsDetection" */;
+			buildConfigurationList = B56340AA2E7CFB3500B112F8 /* Build configuration list for PBXProject "SlideRemote" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -431,7 +431,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"SlideRemoteWatch Watch App/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"SlideRemoteWatch/Preview Content\"";
 				DEVELOPMENT_TEAM = PWMGJ535ZV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -462,7 +462,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"SlideRemoteWatch Watch App/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"SlideRemoteWatch/Preview Content\"";
 				DEVELOPMENT_TEAM = PWMGJ535ZV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -489,7 +489,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B56340AA2E7CFB3500B112F8 /* Build configuration list for PBXProject "RotateWritsDetection" */ = {
+		B56340AA2E7CFB3500B112F8 /* Build configuration list for PBXProject "SlideRemote" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B56340BB2E7CFB3600B112F8 /* Debug */,

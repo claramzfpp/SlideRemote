@@ -1,6 +1,6 @@
 //
 //  iPhoneManager.swift
-//  RotateWritsDetection
+//  SlideRemote
 //
 //  Created by Clara Muniz on 19/09/25.
 //

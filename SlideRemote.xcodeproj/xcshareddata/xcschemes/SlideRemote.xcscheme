@@ -17,7 +17,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B56340AE2E7CFB3500B112F8"
                BuildableName = "SlideRemote.app"
-               ReferencedContainer = "container:RotateWritsDetection.xcodeproj">
+               ReferencedContainer = "container:SlideRemote.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,7 +46,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B56340AE2E7CFB3500B112F8"
             BuildableName = "SlideRemote.app"
-            ReferencedContainer = "container:RotateWritsDetection.xcodeproj">
+            ReferencedContainer = "container:SlideRemote.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -62,7 +62,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B56340AE2E7CFB3500B112F8"
             BuildableName = "SlideRemote.app"
-            ReferencedContainer = "container:RotateWritsDetection.xcodeproj">
+            ReferencedContainer = "container:SlideRemote.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
