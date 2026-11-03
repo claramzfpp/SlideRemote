@@ -12,14 +12,20 @@ import WatchKit
 import Foundation
 
 enum MovementDirection: String, CaseIterable {
-    case shake = "Shake"
+    case rotation = "Rotation"
     case none = "None"
 }
 
 class WatchArmDetector: NSObject, ObservableObject {
     private let motionManager = CMMotionManager()
     private let connectivityManager = WatchConnectivityManager.shared
-    
+
+    /// Valores medidos nos logs: o giro do pulso aparece no eixo x do giroscópio
+    /// (picos de 4 a 14 rad/s, com ~99% da rotação concentrada nesse eixo).
+    /// Só o sentido negativo conta; o sentido positivo é a volta do punho.
+    private static let twistThreshold = 4.0 // rad/s
+    private static let minAxisDominance = 0.9
+
     @Published var isActive: Bool = false
     @Published var currentDirection: MovementDirection = .none
     
@@ -30,7 +36,7 @@ class WatchArmDetector: NSObject, ObservableObject {
     func startMotionUpdates() {
         guard motionManager.isDeviceMotionAvailable else { return }
         
-        motionManager.deviceMotionUpdateInterval = 0.1
+        motionManager.deviceMotionUpdateInterval = 0.02 // 50 Hz: gestos rápidos de pulso duram ~100-200 ms
         motionManager.startDeviceMotionUpdates(to: .main) { [weak self] (data, error) in
             guard let self = self, let data = data else { return }
             self.processWatchMotion(data)
@@ -46,8 +52,7 @@ class WatchArmDetector: NSObject, ObservableObject {
     
     private func processWatchMotion(_ motion: CMDeviceMotion) {
         let userAcceleration = motion.userAcceleration
-        let attitude = motion.attitude
-        
+
         let totalAcceleration = sqrt(
             userAcceleration.x * userAcceleration.x +
             userAcceleration.y * userAcceleration.y +
@@ -57,10 +62,15 @@ class WatchArmDetector: NSObject, ObservableObject {
         var detectedDirection: MovementDirection = .none
         var movementDescription = ""
         
-        // Detecta movimento de sacudir
-        if totalAcceleration > 0.5 || abs(attitude.roll) > 0.5 {
-            detectedDirection = .shake
-            movementDescription = "Wrist SHAKING"
+        // Detecta giro do pulso: rotação rápida e quase toda no eixo x
+        let rate = motion.rotationRate
+        let rotation = sqrt(rate.x * rate.x + rate.y * rate.y + rate.z * rate.z)
+        let isWristTwist = rate.x < -Self.twistThreshold
+            && abs(rate.x) / rotation >= Self.minAxisDominance
+
+        if isWristTwist {
+            detectedDirection = .rotation
+            movementDescription = "Wrist ROTATION"
         }
         
         // Se detectou movimento, envia para iPhone

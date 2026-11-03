@@ -15,7 +15,10 @@ class WatchConnectivityManager: NSObject, ObservableObject { ///isso daqui é tu
     @Published var isWatchConnected: Bool = false
     @Published var lastMovementData: [String: Any] = [:]
     @Published var movimentCount: Int = 0
-    
+
+    /// Chamado no iPhone a cada movimento recebido do Watch.
+    var onMovementReceived: (() -> Void)?
+
     override init() {
         super.init()
         
@@ -61,6 +64,7 @@ extension WatchConnectivityManager: WCSessionDelegate { ///como o iphone RECEBE 
             {
                 self.receivedMovement = "\(movement) detected at \(location)"
                 self.movimentCount = count
+                self.onMovementReceived?()
             }
         }
     }

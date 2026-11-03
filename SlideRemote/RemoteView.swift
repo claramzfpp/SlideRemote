@@ -58,6 +58,11 @@ struct RemoteView: View {
                 .scrollContentBackground(.hidden)
             }
             .background(Color.gray.opacity(0.6))
+            .onAppear {
+                // Cada movimento detectado no Watch aumenta o contador do iPad.
+                connectivity.onMovementReceived = { iPmanager.sendNextSlideCommand() }
+            }
+            .onDisappear { connectivity.onMovementReceived = nil }
             .navigationTitle("Slide Remote")
             .toolbarBackgroundVisibility(.visible, for: .navigationBar)
             .toolbarBackground(Color.gray.opacity(0.6), for: .navigationBar)
