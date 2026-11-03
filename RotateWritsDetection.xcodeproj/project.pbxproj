@@ -37,7 +37,6 @@
 /* Begin PBXFileReference section */
 		B56340AF2E7CFB3500B112F8 /* SlideRemote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SlideRemote.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B56340C42E7CFB6C00B112F8 /* SlideRemoteWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SlideRemoteWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B56340EA2E7D1DA400B112F8 /* SlideRemoteMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SlideRemoteMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -47,13 +46,6 @@
 				WatchConnectivityManager.swift,
 			);
 			target = B56340AE2E7CFB3500B112F8 /* SlideRemote */;
-		};
-		B56341002E7D1FC300B112F8 /* Exceptions for "SlideRemoteMac" folder in "SlideRemoteMac" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = B56340E92E7D1DA400B112F8 /* SlideRemoteMac */;
 		};
 		B56341022E7D217300B112F8 /* Exceptions for "SlideRemote" folder in "SlideRemote" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
@@ -81,14 +73,6 @@
 			path = "SlideRemoteWatch Watch App";
 			sourceTree = "<group>";
 		};
-		B56340EB2E7D1DA400B112F8 /* SlideRemoteMac */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				B56341002E7D1FC300B112F8 /* Exceptions for "SlideRemoteMac" folder in "SlideRemoteMac" target */,
-			);
-			path = SlideRemoteMac;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -106,13 +90,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B56340E72E7D1DA400B112F8 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -121,7 +98,6 @@
 			children = (
 				B56340B12E7CFB3500B112F8 /* SlideRemote */,
 				B56340C52E7CFB6C00B112F8 /* SlideRemoteWatch Watch App */,
-				B56340EB2E7D1DA400B112F8 /* SlideRemoteMac */,
 				B56340B02E7CFB3500B112F8 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -131,7 +107,6 @@
 			children = (
 				B56340AF2E7CFB3500B112F8 /* SlideRemote.app */,
 				B56340C42E7CFB6C00B112F8 /* SlideRemoteWatch Watch App.app */,
-				B56340EA2E7D1DA400B112F8 /* SlideRemoteMac.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -185,28 +160,6 @@
 			productReference = B56340C42E7CFB6C00B112F8 /* SlideRemoteWatch Watch App.app */;
 			productType = "com.apple.product-type.application";
 		};
-		B56340E92E7D1DA400B112F8 /* SlideRemoteMac */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = B56340F62E7D1DA500B112F8 /* Build configuration list for PBXNativeTarget "SlideRemoteMac" */;
-			buildPhases = (
-				B56340E62E7D1DA400B112F8 /* Sources */,
-				B56340E72E7D1DA400B112F8 /* Frameworks */,
-				B56340E82E7D1DA400B112F8 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				B56340EB2E7D1DA400B112F8 /* SlideRemoteMac */,
-			);
-			name = SlideRemoteMac;
-			packageProductDependencies = (
-			);
-			productName = SlideRemoteMac;
-			productReference = B56340EA2E7D1DA400B112F8 /* SlideRemoteMac.app */;
-			productType = "com.apple.product-type.application";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -221,9 +174,6 @@
 						CreatedOnToolsVersion = 16.1;
 					};
 					B56340C32E7CFB6C00B112F8 = {
-						CreatedOnToolsVersion = 16.1;
-					};
-					B56340E92E7D1DA400B112F8 = {
 						CreatedOnToolsVersion = 16.1;
 					};
 				};
@@ -244,7 +194,6 @@
 			targets = (
 				B56340AE2E7CFB3500B112F8 /* SlideRemote */,
 				B56340C32E7CFB6C00B112F8 /* SlideRemoteWatch Watch App */,
-				B56340E92E7D1DA400B112F8 /* SlideRemoteMac */,
 			);
 		};
 /* End PBXProject section */
@@ -264,13 +213,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B56340E82E7D1DA400B112F8 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -282,13 +224,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		B56340C02E7CFB6C00B112F8 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B56340E62E7D1DA400B112F8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -437,7 +372,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SlideRemote/Info.plist;
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Permitir a conexão com o Mac para sincronizar o contador";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Permitir a conexão com o iPad para sincronizar o contador";
 				INFOPLIST_KEY_NSMotionUsageDescription = "Allow to detect motion";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -469,7 +404,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SlideRemote/Info.plist;
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Permitir a conexão com o Mac para sincronizar o contador";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Permitir a conexão com o iPad para sincronizar o contador";
 				INFOPLIST_KEY_NSMotionUsageDescription = "Allow to detect motion";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -551,68 +486,6 @@
 			};
 			name = Release;
 		};
-		B56340F72E7D1DA500B112F8 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = SlideRemoteMac/SlideRemoteMac.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"SlideRemoteMac/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
-				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = SlideRemoteMac/Info.plist;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "$(PRODUCT_BUNDLE_PACKAGE_TYPE)";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 15.1;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = project.RotateWritsDetection.watchkitapp.SlidesController;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
-		B56340F82E7D1DA500B112F8 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = SlideRemoteMac/SlideRemoteMac.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"SlideRemoteMac/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
-				ENABLE_HARDENED_RUNTIME = YES;
-				ENABLE_PREVIEWS = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = SlideRemoteMac/Info.plist;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "$(PRODUCT_BUNDLE_PACKAGE_TYPE)";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 15.1;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = project.RotateWritsDetection.watchkitapp.SlidesController;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -639,15 +512,6 @@
 			buildConfigurations = (
 				B56340D32E7CFB6D00B112F8 /* Debug */,
 				B56340D42E7CFB6D00B112F8 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		B56340F62E7D1DA500B112F8 /* Build configuration list for PBXNativeTarget "SlideRemoteMac" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				B56340F72E7D1DA500B112F8 /* Debug */,
-				B56340F82E7D1DA500B112F8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

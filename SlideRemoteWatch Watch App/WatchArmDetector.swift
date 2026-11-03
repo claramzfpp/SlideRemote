@@ -5,7 +5,7 @@
 //  Created by Clara Muniz on 18/09/25.
 //
 
-//https://gstvdfnbch.medium.com/gesture-detection-on-the-apple-watch-core-motion-7650a652e5b9
+// https://gstvdfnbch.medium.com/gesture-detection-on-the-apple-watch-core-motion-7650a652e5b9
 
 import CoreMotion
 import WatchKit

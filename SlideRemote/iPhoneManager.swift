@@ -78,7 +78,7 @@ class iPhoneManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate
     // Método utilitário genérico
     private func sendCommand(command: String) {
         guard let peer = self.connectedPeer else {
-            print("Nenhum Mac conectado.")
+            print("Nenhum iPad conectado.")
             return
         }
         do {
