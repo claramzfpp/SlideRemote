@@ -5,15 +5,26 @@
 //  Roda no iPad: anuncia o serviço, aceita o iPhone e controla o slide atual.
 //
 
-import MultipeerConnectivity
+import MultipeerConnectivity // comunicação peer-to-peer local, sem servidor ou internet
+/*
+ um framework para comunicação direta entre dispositivos próximos, sem servidor e sem backend
+ funciona entre iPhone, iPad e Mac
+
+ ele escolhe sozinho o meio de transporte disponível:
+ - wi-Fi na mesma rede (infraestrutura)
+ - peer-to-peer Wi-Fi (AWDL, parecido com o AirDrop), sem precisar de roteador
+ - bluetooth
+
+ ele decide e troca de um para outro conforme a disponibilidade
+ */
 import PDFKit
 import Combine
 
 class PresentationReceiver: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate, ObservableObject {
     private let serviceType = "number-sync"
-    private let peerID = MCPeerID(displayName: UIDevice.current.name)
-    private let mcSession: MCSession
-    private let mcAdvertiser: MCNearbyServiceAdvertiser
+    private let peerID = MCPeerID(displayName: UIDevice.current.name) // identidade do ipad na rede (definido como o nome do dispositivo)
+    private let mcSession: MCSession  // sessão de comunicação
+    private let mcAdvertiser: MCNearbyServiceAdvertiser // anunciador do serviço
 
     @Published private(set) var document: PDFDocument?
     @Published private(set) var presentation: Presentation?
@@ -21,8 +32,8 @@ class PresentationReceiver: NSObject, MCSessionDelegate, MCNearbyServiceAdvertis
     @Published private(set) var loadError: String?
 
     override init() {
-        mcSession = MCSession(peer: peerID, securityIdentity: nil, encryptionPreference: .required)
-        mcAdvertiser = MCNearbyServiceAdvertiser(peer: peerID, discoveryInfo: nil, serviceType: serviceType)
+        mcSession = MCSession(peer: peerID, securityIdentity: nil, encryptionPreference: .required) //to definindo que o tráfego de info é criptografado
+        mcAdvertiser = MCNearbyServiceAdvertiser(peer: peerID, discoveryInfo: nil, serviceType: serviceType) // crio o trafego com o meu service type, o iphone vai procurar exatamente esse identificador
         super.init()
         mcSession.delegate = self
         mcAdvertiser.delegate = self
