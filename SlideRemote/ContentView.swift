@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-/// Mesmo app nos dois aparelhos: o iPad recebe e conta, o iPhone envia as setas.
+/// Mesmo app nos dois aparelhos: o iPad mostra os slides, o iPhone envia as setas.
 struct ContentView: View {
     var body: some View {
         if UIDevice.current.userInterfaceIdiom == .pad {
-            CounterView()
+            PresentationView()
         } else {
             RemoteView()
         }

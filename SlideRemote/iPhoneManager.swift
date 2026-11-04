@@ -70,24 +70,23 @@ class iPhoneManager: NSObject, MCSessionDelegate, MCNearbyServiceBrowserDelegate
 
     // Método para avançar o slide
     func sendNextSlideCommand() {
-        sendCommand(command: "nextSlide")
+        sendCommand(.next)
     }
 
     // Método para voltar o slide
     func sendPreviousSlideCommand() {
-        sendCommand(command: "previousSlide")
+        sendCommand(.previous)
     }
 
     // Método utilitário genérico
-    private func sendCommand(command: String) {
+    private func sendCommand(_ command: RemoteCommand) {
         guard let peer = self.connectedPeer else {
             print("Nenhum iPad conectado.")
             return
         }
         do {
-            let data = command.data(using: .utf8)!
-            try self.mcSession.send(data, toPeers: [peer], with: .reliable)
-            print("Comando enviado: \(command)")
+            try self.mcSession.send(command.data, toPeers: [peer], with: .reliable)
+            print("Comando enviado: \(command.rawValue)")
         } catch {
             print("Erro ao enviar o comando: \(error.localizedDescription)")
         }
