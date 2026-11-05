@@ -10,12 +10,15 @@ import PDFKit
 import UniformTypeIdentifiers
 
 struct PresentationView: View {
-    @StateObject private var receiver = PresentationReceiver()
+    @StateObject private var viewModel = PresentationViewModel(
+        receiver: MultipeerCommandReceiver(),
+        pdfLoader: SecurityScopedPDFLoader()
+    )
     @State private var isImporterPresented = false
 
     var body: some View {
         Group {
-            if let document = receiver.document, let presentation = receiver.presentation {
+            if let document = viewModel.document, let presentation = viewModel.presentation {
                 slideScreen(document: document, presentation: presentation)
             } else {
                 emptyScreen
@@ -23,7 +26,7 @@ struct PresentationView: View {
         }
         .fileImporter(isPresented: $isImporterPresented, allowedContentTypes: [.pdf]) { result in
             if case .success(let url) = result {
-                receiver.loadPDF(from: url)
+                viewModel.loadPDF(from: url)
             }
         }
     }
@@ -39,7 +42,7 @@ struct PresentationView: View {
                 .buttonStyle(.borderedProminent)
                 .controlSize(.large)
 
-            if let error = receiver.loadError {
+            if let error = viewModel.loadError {
                 Text(error)
                     .foregroundStyle(.red)
             }
@@ -60,11 +63,11 @@ struct PresentationView: View {
                 Text("\(presentation.currentPage) / \(presentation.pageCount)")
                     .monospacedDigit()
 
-                if !receiver.isConnected {
+                if !viewModel.isConnected {
                     Label("iPhone desconectado", systemImage: "iphone.slash")
                 }
 
-                Button("Fechar", systemImage: "xmark.circle") { receiver.closePresentation() }
+                Button("Fechar", systemImage: "xmark.circle") { viewModel.closePresentation() }
                     .labelStyle(.iconOnly)
             }
             .font(.callout)
@@ -79,10 +82,10 @@ struct PresentationView: View {
 
     private var connectionLabel: some View {
         Label(
-            receiver.isConnected ? "iPhone conectado" : "Aguardando iPhone...",
-            systemImage: receiver.isConnected ? "iphone.radiowaves.left.and.right" : "iphone.slash"
+            viewModel.isConnected ? "iPhone conectado" : "Aguardando iPhone...",
+            systemImage: viewModel.isConnected ? "iphone.radiowaves.left.and.right" : "iphone.slash"
         )
-        .foregroundStyle(receiver.isConnected ? .green : .secondary)
+        .foregroundStyle(viewModel.isConnected ? .green : .secondary)
     }
 }
 

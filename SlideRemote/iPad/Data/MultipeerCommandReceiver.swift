@@ -1,8 +1,8 @@
 //
-//  PresentationReceiver.swift
+//  MultipeerCommandReceiver.swift
 //  SlideRemote
 //
-//  Roda no iPad: anuncia o serviço, aceita o iPhone e controla o slide atual.
+//  Roda no iPad: anuncia o serviço via MultipeerConnectivity e aceita o iPhone.
 //
 
 import MultipeerConnectivity // comunicação peer-to-peer local, sem servidor ou internet
@@ -17,71 +17,52 @@ import MultipeerConnectivity // comunicação peer-to-peer local, sem servidor o
 
  ele decide e troca de um para outro conforme a disponibilidade
  */
-import PDFKit
-import Combine
 
-class PresentationReceiver: NSObject, MCSessionDelegate, MCNearbyServiceAdvertiserDelegate, ObservableObject {
-    private let serviceType = "number-sync"
+final class MultipeerCommandReceiver: NSObject, CommandReceiving {
+    var onCommand: (@MainActor (RemoteCommand) -> Void)?
+    var onConnectionChange: (@MainActor (Bool) -> Void)?
+
+    private let serviceType = RemoteService.type
     private let peerID = MCPeerID(displayName: UIDevice.current.name) // identidade do ipad na rede (definido como o nome do dispositivo)
     private let mcSession: MCSession  // sessão de comunicação
     private let mcAdvertiser: MCNearbyServiceAdvertiser // anunciador do serviço
 
-    @Published private(set) var document: PDFDocument?
-    @Published private(set) var presentation: Presentation?
-    @Published private(set) var isConnected = false
-    @Published private(set) var loadError: String?
-
     override init() {
-        mcSession = MCSession(peer: peerID, securityIdentity: nil, encryptionPreference: .required) //to definindo que o tráfego de info é criptografado
-        mcAdvertiser = MCNearbyServiceAdvertiser(peer: peerID, discoveryInfo: nil, serviceType: serviceType) // crio o trafego com o meu service type, o iphone vai procurar exatamente esse identificador
+        mcSession = MCSession(peer: peerID, securityIdentity: nil, encryptionPreference: .required) // tráfego criptografado
+        mcAdvertiser = MCNearbyServiceAdvertiser(peer: peerID, discoveryInfo: nil, serviceType: serviceType) // o iphone procura exatamente esse identificador
         super.init()
         mcSession.delegate = self
         mcAdvertiser.delegate = self
+    }
+
+    func start() {
         mcAdvertiser.startAdvertisingPeer()
         print("iPad está anunciando o serviço \(serviceType) como: \(peerID.displayName)")
     }
 
-    // MARK: - PDF
-
-    /// Carrega o PDF escolhido pelo usuário. Deve rodar na main thread.
-    func loadPDF(from url: URL) {
-        // O arquivo vem do seletor de arquivos, fora do sandbox do app.
-        let hasAccess = url.startAccessingSecurityScopedResource()
-        defer { if hasAccess { url.stopAccessingSecurityScopedResource() } }
-
-        do {
-            // Lê tudo para a memória enquanto o acesso está aberto.
-            let data = try Data(contentsOf: url)
-            guard let pdf = PDFDocument(data: data), pdf.pageCount > 0 else {
-                loadError = "Não foi possível abrir esse PDF."
-                return
-            }
-            document = pdf
-            presentation = Presentation(pageCount: pdf.pageCount)
-            loadError = nil
-        } catch {
-            loadError = "Erro ao ler o arquivo: \(error.localizedDescription)"
-        }
+    func stop() {
+        mcAdvertiser.stopAdvertisingPeer()
+        mcSession.disconnect()
     }
+}
 
-    func closePresentation() {
-        document = nil
-        presentation = nil
-    }
+// MARK: - MCNearbyServiceAdvertiserDelegate
 
-    // MARK: - MCNearbyServiceAdvertiserDelegate
-
+extension MultipeerCommandReceiver: MCNearbyServiceAdvertiserDelegate {
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
         print("Recebeu um convite de \(peerID.displayName)")
+        // TODO: pareamento seguro
         invitationHandler(true, mcSession)
     }
 
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: Error) {
         print("Erro ao anunciar: \(error.localizedDescription)")
     }
+}
 
-    // MARK: - MCSessionDelegate
+// MARK: - MCSessionDelegate
 
+extension MultipeerCommandReceiver: MCSessionDelegate {
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
         guard let command = RemoteCommand(data: data) else {
             print("Comando desconhecido")
@@ -90,15 +71,14 @@ class PresentationReceiver: NSObject, MCSessionDelegate, MCNearbyServiceAdvertis
         print("Comando recebido: \(command.rawValue)")
 
         DispatchQueue.main.async {
-            // Sem PDF carregado não há o que avançar.
-            self.presentation?.apply(command)
+            self.onCommand?(command)
         }
     }
 
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         print("Estado da conexão com \(peerID.displayName): \(state.rawValue)")
         DispatchQueue.main.async {
-            self.isConnected = !session.connectedPeers.isEmpty
+            self.onConnectionChange?(!session.connectedPeers.isEmpty)
         }
     }
 
