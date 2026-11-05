@@ -69,7 +69,9 @@ struct PresentationViewModelTests {
 
     private func makeViewModel(
         timeout: Duration = .seconds(25),
-        pairingTimeout: Duration = .seconds(60)
+        pairingTimeout: Duration = .seconds(60),
+        throttle: CommandThrottle = CommandThrottle(maxCommands: 10, window: .seconds(1)),
+        clock: @escaping () -> ContinuousClock.Instant = { .now }
     ) -> (PresentationViewModel, () -> Int) {
         var queue = [first, second, PairingCode("333333")!, PairingCode("444444")!]
         var calls = 0
@@ -78,6 +80,8 @@ struct PresentationViewModelTests {
             pdfLoader: StubPDFLoader(),
             invitationTimeout: timeout,
             pairingTimeout: pairingTimeout,
+            throttle: throttle,
+            clock: clock,
             codeGenerator: {
                 calls += 1
                 return queue.isEmpty ? PairingCode.generate() : queue.removeFirst()
@@ -343,5 +347,60 @@ struct PresentationViewModelTests {
         let (viewModel, _) = makeViewModel()
         viewModel.disconnectPhone()
         #expect(receiver.disconnectCount == 0)
+    }
+
+    // MARK: - Limite de taxa
+
+    @Test func commandsAboveTheRateLimitAreDropped() {
+        var now = ContinuousClock.now
+        let (viewModel, _) = makeViewModel(
+            throttle: CommandThrottle(maxCommands: 1, window: .seconds(1)),
+            clock: { now }
+        )
+        loadPDF(viewModel)
+        connectApproved(viewModel)
+        receiver.simulate(.pair(first))
+
+        receiver.simulate(.command(.next))
+        receiver.simulate(.command(.next))
+        #expect(viewModel.presentation?.currentIndex == 1)
+
+        now = now.advanced(by: .seconds(1))
+        receiver.simulate(.command(.next))
+        #expect(viewModel.presentation?.currentIndex == 2)
+    }
+
+    @Test func eachNewSessionStartsWithAFreshRateLimit() {
+        let now = ContinuousClock.now
+        let (viewModel, _) = makeViewModel(
+            throttle: CommandThrottle(maxCommands: 1, window: .seconds(1)),
+            clock: { now }
+        )
+        loadPDF(viewModel)
+        connectApproved(viewModel)
+        receiver.simulate(.pair(first))
+        receiver.simulate(.command(.next))
+        receiver.simulate(.command(.next))
+        #expect(viewModel.presentation?.currentIndex == 1)
+
+        receiver.simulateConnection(false)
+        connectApproved(viewModel)
+        receiver.simulate(.pair(second))
+        receiver.simulate(.command(.next))
+        #expect(viewModel.presentation?.currentIndex == 2)
+    }
+
+    @Test func droppedCommandsDoNotAffectPairing() {
+        let now = ContinuousClock.now
+        let (viewModel, _) = makeViewModel(
+            throttle: CommandThrottle(maxCommands: 1, window: .seconds(1)),
+            clock: { now }
+        )
+        connectApproved(viewModel)
+        receiver.simulate(.pair(first))
+        receiver.simulate(.command(.next))
+        receiver.simulate(.command(.next))
+        #expect(viewModel.isAuthenticated)
+        #expect(viewModel.isConnected)
     }
 }
