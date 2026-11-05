@@ -66,6 +66,11 @@ struct PresentationViewModelTests {
     private let first = PairingCode("111111")!
     private let second = PairingCode("222222")!
     private let wrong = PairingCode("999999")!
+    private let t1 = HexToken("11111111111111111111111111111111")!
+    private let t2 = HexToken("22222222222222222222222222222222")!
+    private let t3 = HexToken("33333333333333333333333333333333")!
+    private let t4 = HexToken("44444444444444444444444444444444")!
+    private let t5 = HexToken("55555555555555555555555555555555")!
 
     private func makeViewModel(
         timeout: Duration = .seconds(25),
@@ -73,6 +78,7 @@ struct PresentationViewModelTests {
         throttle: CommandThrottle = CommandThrottle(maxCommands: 10, window: .seconds(1)),
         clock: @escaping () -> ContinuousClock.Instant = { .now }
     ) -> (PresentationViewModel, () -> Int) {
+        var tokens = [t1, t2, t3, t4, t5]
         var queue = [first, second, PairingCode("333333")!, PairingCode("444444")!]
         var calls = 0
         let viewModel = PresentationViewModel(
@@ -82,6 +88,7 @@ struct PresentationViewModelTests {
             pairingTimeout: pairingTimeout,
             throttle: throttle,
             clock: clock,
+            tokenGenerator: { tokens.isEmpty ? HexToken.generate() : tokens.removeFirst() },
             codeGenerator: {
                 calls += 1
                 return queue.isEmpty ? PairingCode.generate() : queue.removeFirst()
@@ -200,7 +207,7 @@ struct PresentationViewModelTests {
         loadPDF(viewModel)
         connectApproved(viewModel)
         receiver.simulate(.pair(first))
-        #expect(receiver.sent == [.pairingResult(.accepted)])
+        #expect(receiver.sent == [.pairingResult(.accepted), .credential(t1)])
         #expect(viewModel.isAuthenticated)
         receiver.simulate(.command(.next))
         #expect(viewModel.presentation?.currentIndex == 1)
@@ -402,5 +409,176 @@ struct PresentationViewModelTests {
         receiver.simulate(.command(.next))
         #expect(viewModel.isAuthenticated)
         #expect(viewModel.isConnected)
+    }
+
+    // MARK: - Retomada de sessão (credencial em memória)
+
+    /// Pareia com o código e devolve a viewModel já autenticada (credencial `t1` emitida).
+    private func pairWithCode(_ viewModel: PresentationViewModel) {
+        connectApproved(viewModel)
+        receiver.simulate(.pair(first))
+    }
+
+    private func reconnectApproved(_ viewModel: PresentationViewModel) {
+        receiver.simulateConnection(false)
+        connectApproved(viewModel)
+    }
+
+    @Test func acceptedCodeIssuesACredentialInsideTheSession() {
+        let (viewModel, _) = makeViewModel()
+        pairWithCode(viewModel)
+        #expect(receiver.sent == [.pairingResult(.accepted), .credential(t1)])
+        #expect(viewModel.isAuthenticated)
+    }
+
+    @Test func wrongCodeDoesNotIssueACredential() {
+        let (viewModel, _) = makeViewModel()
+        connectApproved(viewModel)
+        receiver.simulate(.pair(wrong))
+        #expect(receiver.sent == [.pairingResult(.rejected(attemptsLeft: 2))])
+        _ = viewModel
+    }
+
+    @Test func resumeWithoutACredentialIsRejected() {
+        let (viewModel, _) = makeViewModel()
+        connectApproved(viewModel)
+        receiver.simulate(.resumeRequest)
+        #expect(receiver.sent == [.resumeRejected])
+        #expect(!viewModel.isAuthenticated)
+    }
+
+    @Test func resumeWithoutAnApprovedInvitationIsRejected() {
+        let (viewModel, _) = makeViewModel()
+        pairWithCode(viewModel)
+        receiver.simulateConnection(false)
+        let before = receiver.sent.count
+        receiver.simulate(.resumeRequest)
+        #expect(Array(receiver.sent.dropFirst(before)) == [.resumeRejected])
+        #expect(!viewModel.isAuthenticated)
+    }
+
+    @Test func resumeAfterADropIssuesAChallenge() {
+        let (viewModel, _) = makeViewModel()
+        pairWithCode(viewModel)
+        reconnectApproved(viewModel)
+        receiver.simulate(.resumeRequest)
+        #expect(receiver.sent.last == .resumeChallenge(t2))
+        #expect(!viewModel.isAuthenticated)
+    }
+
+    @Test func validProofAuthenticatesWithoutTheCodeAndRotatesTheCredential() {
+        let (viewModel, _) = makeViewModel()
+        loadPDF(viewModel)
+        pairWithCode(viewModel)
+        reconnectApproved(viewModel)
+        receiver.simulate(.resumeRequest)
+        let before = receiver.sent.count
+
+        receiver.simulate(.resumeProof(ResumeProof.compute(credential: t1, nonce: t2)))
+
+        #expect(viewModel.isAuthenticated)
+        #expect(Array(receiver.sent.dropFirst(before)) == [.pairingResult(.accepted), .credential(t3)])
+        receiver.simulate(.command(.next))
+        #expect(viewModel.presentation?.currentIndex == 1)
+    }
+
+    @Test func invalidProofIsRejectedAndDoesNotAuthenticate() {
+        let (viewModel, _) = makeViewModel()
+        loadPDF(viewModel)
+        pairWithCode(viewModel)
+        reconnectApproved(viewModel)
+        receiver.simulate(.resumeRequest)
+
+        receiver.simulate(.resumeProof(ResumeProof.compute(credential: t5, nonce: t2)))
+
+        #expect(receiver.sent.last == .resumeRejected)
+        #expect(!viewModel.isAuthenticated)
+        receiver.simulate(.command(.next))
+        #expect(viewModel.presentation?.currentIndex == 0)
+    }
+
+    @Test func proofWithoutAPendingChallengeIsRejected() {
+        let (viewModel, _) = makeViewModel()
+        pairWithCode(viewModel)
+        reconnectApproved(viewModel)
+        receiver.simulate(.resumeProof(ResumeProof.compute(credential: t1, nonce: t2)))
+        #expect(receiver.sent.last == .resumeRejected)
+        #expect(!viewModel.isAuthenticated)
+    }
+
+    @Test func aChallengeCanOnlyBeAnsweredOnce() {
+        let (viewModel, _) = makeViewModel()
+        pairWithCode(viewModel)
+        reconnectApproved(viewModel)
+        receiver.simulate(.resumeRequest)
+        receiver.simulate(.resumeProof(ResumeProof.compute(credential: t5, nonce: t2))) // errada, consome o desafio
+        receiver.simulate(.resumeProof(ResumeProof.compute(credential: t1, nonce: t2))) // certa, mas tarde demais
+        #expect(receiver.sent.last == .resumeRejected)
+        #expect(!viewModel.isAuthenticated)
+    }
+
+    @Test func rotatedCredentialInvalidatesTheOldOne() {
+        let (viewModel, _) = makeViewModel()
+        pairWithCode(viewModel)                                  // credencial t1
+        reconnectApproved(viewModel)
+        receiver.simulate(.resumeRequest)                        // desafio t2
+        receiver.simulate(.resumeProof(ResumeProof.compute(credential: t1, nonce: t2))) // emite t3
+
+        reconnectApproved(viewModel)
+        receiver.simulate(.resumeRequest)                        // desafio t4
+        receiver.simulate(.resumeProof(ResumeProof.compute(credential: t1, nonce: t4)))
+        #expect(receiver.sent.last == .resumeRejected)
+        #expect(!viewModel.isAuthenticated)
+    }
+
+    @Test func disconnectingThePhoneRevokesTheCredential() {
+        let (viewModel, _) = makeViewModel()
+        pairWithCode(viewModel)
+        viewModel.disconnectPhone()
+        connectApproved(viewModel)
+        receiver.simulate(.resumeRequest)
+        #expect(receiver.sent.last == .resumeRejected)
+        #expect(!viewModel.isAuthenticated)
+    }
+
+    @Test func lockingTheSessionRevokesTheCredential() {
+        let (viewModel, _) = makeViewModel()
+        pairWithCode(viewModel)
+        reconnectApproved(viewModel)
+        for _ in 0..<3 { receiver.simulate(.pair(wrong)) }       // trava
+        reconnectApproved(viewModel)
+        receiver.simulate(.resumeRequest)
+        #expect(receiver.sent.last == .resumeRejected)
+        #expect(!viewModel.isAuthenticated)
+    }
+
+    @Test func connectionDropKeepsTheCredentialForTheNextResume() {
+        let (viewModel, _) = makeViewModel()
+        pairWithCode(viewModel)
+        reconnectApproved(viewModel)
+        receiver.simulate(.resumeRequest)
+        #expect(receiver.sent.last == .resumeChallenge(t2))
+        _ = viewModel
+    }
+
+    @Test func resumeWhileAlreadyAuthenticatedIsIgnored() {
+        let (viewModel, _) = makeViewModel()
+        pairWithCode(viewModel)
+        let before = receiver.sent.count
+        receiver.simulate(.resumeRequest)
+        #expect(receiver.sent.count == before)
+        #expect(viewModel.isAuthenticated)
+    }
+
+    @Test func resumingBeforeTheDeadlineKeepsTheConnection() async throws {
+        let (viewModel, _) = makeViewModel(pairingTimeout: .milliseconds(150))
+        pairWithCode(viewModel)
+        reconnectApproved(viewModel)
+        receiver.simulate(.resumeRequest)
+        receiver.simulate(.resumeProof(ResumeProof.compute(credential: t1, nonce: t2)))
+        let disconnectsBefore = receiver.disconnectCount
+        try await Task.sleep(for: .milliseconds(500))
+        #expect(receiver.disconnectCount == disconnectsBefore)
+        #expect(viewModel.isAuthenticated)
     }
 }
