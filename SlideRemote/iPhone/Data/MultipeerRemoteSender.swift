@@ -61,7 +61,7 @@ final class MultipeerRemoteSender: NSObject, RemoteCommandSending {
         do {
             try session.send(message.data, toPeers: [peer], with: .reliable)
         } catch {
-            print("Erro ao enviar a mensagem: \(error.localizedDescription)")
+            AppLog.connectivity.error("Erro ao enviar a mensagem: \(error.localizedDescription, privacy: .public)")
         }
     }
 

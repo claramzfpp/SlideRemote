@@ -172,6 +172,6 @@ struct ArrowButton: View {
         image: Image(systemName: "arrow.left"),
         accessibilityLabel: "Slide Anterior"
     ) {
-        print("pra trás")
+        // preview: sem ação
     }
 }

@@ -8,11 +8,13 @@
 import WatchConnectivity ///gerenciar a comunicação entre um aplicativo de iPhone e um aplicativo de Apple Watch
 // Watch (gesto) → WatchConnectivityManager → iPhone → MultipeerRemoteSender (Multipeer) → iPad
 import Foundation
+import OSLog
 
 class WatchConnectivityManager: NSObject, ObservableObject {
     static let shared = WatchConnectivityManager()
 
     private static let movementKey = "movement"
+    private static let log = Logger(subsystem: Bundle.main.bundleIdentifier ?? "SlideRemoteWatch", category: "connectivity")
 
     /// Chamado no iPhone a cada movimento recebido do Watch.
     var onMovementReceived: (() -> Void)?
@@ -31,7 +33,7 @@ class WatchConnectivityManager: NSObject, ObservableObject {
         guard WCSession.default.isReachable else { return }
 
         WCSession.default.sendMessage([Self.movementKey: "wristTwist"], replyHandler: nil) { error in
-            print("Error sending data: \(error.localizedDescription)")
+            Self.log.error("Error sending data: \(error.localizedDescription, privacy: .public)")
         }
     }
 }

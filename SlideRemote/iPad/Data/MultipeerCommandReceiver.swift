@@ -42,7 +42,7 @@ final class MultipeerCommandReceiver: NSObject, CommandReceiving {
 
     func start() {
         mcAdvertiser.startAdvertisingPeer()
-        print("iPad está anunciando o serviço \(serviceType) como: \(peerID.displayName)")
+        AppLog.connectivity.info("Anunciando o serviço \(self.serviceType, privacy: .public) como \(self.peerID.displayName, privacy: .private)")
     }
 
     func stop() {
@@ -75,7 +75,7 @@ final class MultipeerCommandReceiver: NSObject, CommandReceiving {
         do {
             try mcSession.send(message.data, toPeers: peers, with: .reliable)
         } catch {
-            print("Erro ao enviar mensagem: \(error.localizedDescription)")
+            AppLog.connectivity.error("Erro ao enviar mensagem: \(error.localizedDescription, privacy: .public)")
         }
     }
 
@@ -90,7 +90,7 @@ final class MultipeerCommandReceiver: NSObject, CommandReceiving {
 
 extension MultipeerCommandReceiver: MCNearbyServiceAdvertiserDelegate {
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
-        print("Recebeu um convite de \(peerID.displayName)")
+        AppLog.connectivity.info("Convite recebido de \(peerID.displayName, privacy: .private)")
         DispatchQueue.main.async {
             let hasActivePeer = self.pendingInvitation != nil
                 || self.approvedPeer != nil
@@ -106,7 +106,7 @@ extension MultipeerCommandReceiver: MCNearbyServiceAdvertiserDelegate {
     }
 
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: Error) {
-        print("Erro ao anunciar: \(error.localizedDescription)")
+        AppLog.connectivity.error("Erro ao anunciar: \(error.localizedDescription, privacy: .public)")
     }
 }
 
@@ -123,7 +123,7 @@ extension MultipeerCommandReceiver: MCSessionDelegate {
     }
 
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
-        print("Estado da conexão com \(peerID.displayName): \(state.rawValue)")
+        AppLog.connectivity.info("Estado da conexão com \(peerID.displayName, privacy: .private): \(state.rawValue, privacy: .public)")
         DispatchQueue.main.async {
             // "Conectando" ainda não é queda: avisar agora apagaria o código recém-criado.
             guard state != .connecting else { return }
