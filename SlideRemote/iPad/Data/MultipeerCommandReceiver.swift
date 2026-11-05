@@ -81,6 +81,8 @@ final class MultipeerCommandReceiver: NSObject, CommandReceiving {
 
     func disconnectPeer() {
         mcSession.disconnect()
+        // Libera também quem foi aprovado mas nunca completou a conexão; senão a vaga ficaria presa.
+        DispatchQueue.main.async { self.approvedPeer = nil }
     }
 }
 

@@ -64,6 +64,7 @@ struct PresentationView: View {
 
             connectionLabel
             pairingCodeView
+            disconnectButton
         }
         .padding()
     }
@@ -92,6 +93,11 @@ struct PresentationView: View {
                           systemImage: "iphone.slash")
                 }
 
+                if canDisconnectPhone {
+                    Button("Desconectar iPhone", systemImage: "iphone.slash") { viewModel.disconnectPhone() }
+                        .labelStyle(.iconOnly)
+                }
+
                 Button("Fechar", systemImage: "xmark.circle") { viewModel.closePresentation() }
                     .labelStyle(.iconOnly)
             }
@@ -103,6 +109,20 @@ struct PresentationView: View {
             .padding(.bottom, 12)
         }
         .background(Color.black)
+    }
+
+    /// Disponível enquanto houver um iPhone aprovado, conectado ou não.
+    private var canDisconnectPhone: Bool {
+        viewModel.isConnected || viewModel.pairingCode != nil
+    }
+
+    @ViewBuilder
+    private var disconnectButton: some View {
+        if canDisconnectPhone {
+            Button("Desconectar iPhone", systemImage: "iphone.slash", role: .destructive) {
+                viewModel.disconnectPhone()
+            }
+        }
     }
 
     private var connectionLabel: some View {
