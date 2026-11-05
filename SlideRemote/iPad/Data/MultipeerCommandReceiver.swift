@@ -19,13 +19,18 @@ import MultipeerConnectivity // comunicação peer-to-peer local, sem servidor o
  */
 
 final class MultipeerCommandReceiver: NSObject, CommandReceiving {
-    var onCommand: (@MainActor (RemoteCommand) -> Void)?
+    var onMessage: (@MainActor (RemoteMessage) -> Void)?
     var onConnectionChange: (@MainActor (Bool) -> Void)?
+    var onInvitation: (@MainActor (String) -> Void)?
 
     private let serviceType = RemoteService.type
     private let peerID = MCPeerID(displayName: UIDevice.current.name) // identidade do ipad na rede (definido como o nome do dispositivo)
     private let mcSession: MCSession  // sessão de comunicação
     private let mcAdvertiser: MCNearbyServiceAdvertiser // anunciador do serviço
+
+    // Estado de convites: só é lido e escrito na main thread.
+    private var pendingInvitation: (peer: MCPeerID, handler: (Bool, MCSession?) -> Void)?
+    private var approvedPeer: MCPeerID? // aprovado, mas ainda conectando
 
     override init() {
         mcSession = MCSession(peer: peerID, securityIdentity: nil, encryptionPreference: .required) // tráfego criptografado
@@ -43,6 +48,39 @@ final class MultipeerCommandReceiver: NSObject, CommandReceiving {
     func stop() {
         mcAdvertiser.stopAdvertisingPeer()
         mcSession.disconnect()
+        DispatchQueue.main.async {
+            self.pendingInvitation?.handler(false, nil)
+            self.pendingInvitation = nil
+            self.approvedPeer = nil
+        }
+    }
+
+    func respondToInvitation(accept: Bool) {
+        let respond = { [self] in
+            guard let pending = pendingInvitation else { return }
+            pendingInvitation = nil
+            if accept {
+                approvedPeer = pending.peer
+                pending.handler(true, mcSession)
+            } else {
+                pending.handler(false, nil)
+            }
+        }
+        if Thread.isMainThread { respond() } else { DispatchQueue.main.async(execute: respond) }
+    }
+
+    func send(_ message: RemoteMessage) {
+        let peers = mcSession.connectedPeers
+        guard !peers.isEmpty else { return }
+        do {
+            try mcSession.send(message.data, toPeers: peers, with: .reliable)
+        } catch {
+            print("Erro ao enviar mensagem: \(error.localizedDescription)")
+        }
+    }
+
+    func disconnectPeer() {
+        mcSession.disconnect()
     }
 }
 
@@ -51,8 +89,18 @@ final class MultipeerCommandReceiver: NSObject, CommandReceiving {
 extension MultipeerCommandReceiver: MCNearbyServiceAdvertiserDelegate {
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
         print("Recebeu um convite de \(peerID.displayName)")
-        // TODO: pareamento seguro
-        invitationHandler(true, mcSession)
+        DispatchQueue.main.async {
+            let hasActivePeer = self.pendingInvitation != nil
+                || self.approvedPeer != nil
+                || !self.mcSession.connectedPeers.isEmpty
+            switch InvitationPolicy.decide(hasActivePeer: hasActivePeer) {
+            case .reject:
+                invitationHandler(false, nil)
+            case .askUser:
+                self.pendingInvitation = (peerID, invitationHandler)
+                self.onInvitation?(peerID.displayName)
+            }
+        }
     }
 
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: Error) {
@@ -64,20 +112,20 @@ extension MultipeerCommandReceiver: MCNearbyServiceAdvertiserDelegate {
 
 extension MultipeerCommandReceiver: MCSessionDelegate {
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
-        guard let command = RemoteCommand(data: data) else {
-            print("Comando desconhecido")
-            return
-        }
-        print("Comando recebido: \(command.rawValue)")
+        // Conteúdo nunca é logado: pode ser o código de pareamento.
+        guard let message = RemoteMessage(data: data) else { return }
 
         DispatchQueue.main.async {
-            self.onCommand?(command)
+            self.onMessage?(message)
         }
     }
 
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
         print("Estado da conexão com \(peerID.displayName): \(state.rawValue)")
         DispatchQueue.main.async {
+            // "Conectando" ainda não é queda: avisar agora apagaria o código recém-criado.
+            guard state != .connecting else { return }
+            if self.approvedPeer == peerID { self.approvedPeer = nil }
             self.onConnectionChange?(!session.connectedPeers.isEmpty)
         }
     }
