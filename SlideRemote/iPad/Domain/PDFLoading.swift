@@ -14,12 +14,15 @@ protocol PDFLoading {
 
 enum PDFLoadError: LocalizedError {
     case invalidDocument
+    case fileTooLarge
     case readFailed(reason: String)
 
     var errorDescription: String? {
         switch self {
         case .invalidDocument:
             "Não foi possível abrir esse PDF."
+        case .fileTooLarge:
+            "Esse PDF é grande demais para abrir."
         case .readFailed(let reason):
             "Erro ao ler o arquivo: \(reason)"
         }
