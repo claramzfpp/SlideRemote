@@ -2,7 +2,7 @@
 //  RemoteView.swift
 //  SlideRemote
 //
-//  Tela do iPhone: setas que controlam o contador do iPad.
+//  Tela do iPhone: setas que controlam os slides no iPad.
 //
 
 import SwiftUI
