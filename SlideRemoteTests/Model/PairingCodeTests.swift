@@ -29,10 +29,15 @@ struct PairingCodeTests {
         #expect(!a.matches(b))
     }
 
-    @Test func generatedCodeIsAlwaysSixDigitsWithLeadingZeros() {
-        var generator = FixedGenerator(value: 42)
-        let code = PairingCode.generate(using: &generator)
-        #expect(code.value == "000042")
+    @Test func numberIsPaddedWithLeadingZeros() {
+        #expect(PairingCode(number: 0)?.value == "000000")
+        #expect(PairingCode(number: 42)?.value == "000042")
+        #expect(PairingCode(number: 999_999)?.value == "999999")
+    }
+
+    @Test func numberOutOfRangeIsRejected() {
+        #expect(PairingCode(number: -1) == nil)
+        #expect(PairingCode(number: 1_000_000) == nil)
     }
 
     @Test func generatedCodeStaysWithinRange() {
@@ -41,10 +46,4 @@ struct PairingCodeTests {
             #expect(PairingCode(PairingCode.generate(using: &generator).value) != nil)
         }
     }
-}
-
-/// Gerador determinístico: `random(in:)` devolve sempre o resto de `value` dentro do intervalo.
-private struct FixedGenerator: RandomNumberGenerator {
-    let value: UInt64
-    mutating func next() -> UInt64 { value }
 }
