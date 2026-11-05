@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var armDetector = WatchArmDetector()
-    @StateObject private var connectivity = WatchConnectivityManager.shared
     
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
