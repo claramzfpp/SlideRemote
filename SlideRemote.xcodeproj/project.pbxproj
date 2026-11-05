@@ -18,6 +18,13 @@
 			remoteGlobalIDString = B56340C32E7CFB6C00B112F8;
 			remoteInfo = "SlideRemoteWatch Watch App";
 		};
+		B56350010000000000000008 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B56340A72E7CFB3500B112F8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B56340AE2E7CFB3500B112F8;
+			remoteInfo = SlideRemote;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -37,6 +44,7 @@
 /* Begin PBXFileReference section */
 		B56340AF2E7CFB3500B112F8 /* SlideRemote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SlideRemote.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B56340C42E7CFB6C00B112F8 /* SlideRemoteWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SlideRemoteWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B56350010000000000000002 /* SlideRemoteTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SlideRemoteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -73,6 +81,11 @@
 			path = SlideRemoteWatch;
 			sourceTree = "<group>";
 		};
+		B56350010000000000000003 /* SlideRemoteTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = SlideRemoteTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +103,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B56350010000000000000005 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -98,6 +118,7 @@
 			children = (
 				B56340B12E7CFB3500B112F8 /* SlideRemote */,
 				B56340C52E7CFB6C00B112F8 /* SlideRemoteWatch */,
+				B56350010000000000000003 /* SlideRemoteTests */,
 				B56340B02E7CFB3500B112F8 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -107,6 +128,7 @@
 			children = (
 				B56340AF2E7CFB3500B112F8 /* SlideRemote.app */,
 				B56340C42E7CFB6C00B112F8 /* SlideRemoteWatch Watch App.app */,
+				B56350010000000000000002 /* SlideRemoteTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -160,6 +182,29 @@
 			productReference = B56340C42E7CFB6C00B112F8 /* SlideRemoteWatch Watch App.app */;
 			productType = "com.apple.product-type.application";
 		};
+		B56350010000000000000001 /* SlideRemoteTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B56350010000000000000009 /* Build configuration list for PBXNativeTarget "SlideRemoteTests" */;
+			buildPhases = (
+				B56350010000000000000004 /* Sources */,
+				B56350010000000000000005 /* Frameworks */,
+				B56350010000000000000006 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B56350010000000000000007 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				B56350010000000000000003 /* SlideRemoteTests */,
+			);
+			name = SlideRemoteTests;
+			packageProductDependencies = (
+			);
+			productName = SlideRemoteTests;
+			productReference = B56350010000000000000002 /* SlideRemoteTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -175,6 +220,10 @@
 					};
 					B56340C32E7CFB6C00B112F8 = {
 						CreatedOnToolsVersion = 16.1;
+					};
+					B56350010000000000000001 = {
+						CreatedOnToolsVersion = 16.1;
+						TestTargetID = B56340AE2E7CFB3500B112F8;
 					};
 				};
 			};
@@ -194,6 +243,7 @@
 			targets = (
 				B56340AE2E7CFB3500B112F8 /* SlideRemote */,
 				B56340C32E7CFB6C00B112F8 /* SlideRemoteWatch Watch App */,
+				B56350010000000000000001 /* SlideRemoteTests */,
 			);
 		};
 /* End PBXProject section */
@@ -207,6 +257,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		B56340C22E7CFB6C00B112F8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B56350010000000000000006 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -230,6 +287,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B56350010000000000000004 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -237,6 +301,11 @@
 			isa = PBXTargetDependency;
 			target = B56340C32E7CFB6C00B112F8 /* SlideRemoteWatch Watch App */;
 			targetProxy = B56340CF2E7CFB6D00B112F8 /* PBXContainerItemProxy */;
+		};
+		B56350010000000000000007 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B56340AE2E7CFB3500B112F8 /* SlideRemote */;
+			targetProxy = B56350010000000000000008 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -486,6 +555,42 @@
 			};
 			name = Release;
 		};
+		B5635001000000000000000A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = PWMGJ535ZV;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = project.SlideRemoteTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SlideRemote.app/SlideRemote";
+			};
+			name = Debug;
+		};
+		B5635001000000000000000B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = PWMGJ535ZV;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = project.SlideRemoteTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/SlideRemote.app/SlideRemote";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -512,6 +617,15 @@
 			buildConfigurations = (
 				B56340D32E7CFB6D00B112F8 /* Debug */,
 				B56340D42E7CFB6D00B112F8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B56350010000000000000009 /* Build configuration list for PBXNativeTarget "SlideRemoteTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B5635001000000000000000A /* Debug */,
+				B5635001000000000000000B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
