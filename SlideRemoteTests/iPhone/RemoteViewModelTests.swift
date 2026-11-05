@@ -211,4 +211,121 @@ struct RemoteViewModelTests {
         #expect(sender.connectRequests.count == 1)
         #expect(viewModel.phase == .enteringCode(attemptsLeft: nil))
     }
+
+    // MARK: - Retomada sem código
+
+    private let credential = HexToken("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")!
+    private let rotated = HexToken("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")!
+    private let nonce = HexToken("cccccccccccccccccccccccccccccccc")!
+    private let otherNonce = HexToken("dddddddddddddddddddddddddddddddd")!
+
+    private func pairAndStoreCredential() {
+        reachPaired()
+        sender.receive(.credential(credential))
+    }
+
+    private func dropAndReconnect(to peer: DiscoveredPeer? = nil) {
+        sender.setConnected(false)
+        viewModel.select(peer ?? ipad)
+        sender.setConnected(true)
+    }
+
+    @Test func reconnectingToAKnownIPadResumesInsteadOfAskingForTheCode() {
+        pairAndStoreCredential()
+        dropAndReconnect()
+        #expect(viewModel.phase == .verifying)
+        #expect(sender.sent.last == .resumeRequest)
+    }
+
+    @Test func reconnectingToADifferentIPadAsksForTheCode() {
+        pairAndStoreCredential()
+        dropAndReconnect(to: DiscoveredPeer(id: "ipad-2", name: "Outro iPad"))
+        #expect(viewModel.phase == .enteringCode(attemptsLeft: nil))
+    }
+
+    @Test func aCredentialReceivedOutsidePairingIsIgnored() {
+        sender.receive(.credential(credential))
+        reachEnteringCode()
+        #expect(viewModel.phase == .enteringCode(attemptsLeft: nil))
+    }
+
+    @Test func theChallengeIsAnsweredWithAProofAndNeverTheCredential() {
+        pairAndStoreCredential()
+        dropAndReconnect()
+        sender.receive(.resumeChallenge(nonce))
+
+        #expect(sender.sent.last == .resumeProof(ResumeProof.compute(credential: credential, nonce: nonce)))
+        let everythingSent = sender.sent.map { String(decoding: $0.data, as: UTF8.self) }.joined()
+        #expect(!everythingSent.contains(credential.value))
+    }
+
+    @Test func aChallengeOutsideAResumeIsIgnored() {
+        reachVerifying()
+        let before = sender.sent.count
+        sender.receive(.resumeChallenge(nonce))
+        #expect(sender.sent.count == before)
+    }
+
+    @Test func acceptedResumePairsAndTheRotatedCredentialIsUsedNext() {
+        pairAndStoreCredential()
+        dropAndReconnect()
+        sender.receive(.resumeChallenge(nonce))
+        sender.receive(.pairingResult(.accepted))
+        sender.receive(.credential(rotated))
+        #expect(viewModel.phase == .paired)
+
+        dropAndReconnect()
+        sender.receive(.resumeChallenge(otherNonce))
+        #expect(sender.sent.last == .resumeProof(ResumeProof.compute(credential: rotated, nonce: otherNonce)))
+    }
+
+    @Test func rejectedResumeFallsBackToTheCodeAndForgetsTheCredential() {
+        pairAndStoreCredential()
+        dropAndReconnect()
+        sender.receive(.resumeRejected)
+        #expect(viewModel.phase == .enteringCode(attemptsLeft: nil))
+        #expect(viewModel.codeError != nil)
+
+        dropAndReconnect()
+        #expect(viewModel.phase == .enteringCode(attemptsLeft: nil))
+    }
+
+    @Test func lockedForgetsTheCredential() {
+        pairAndStoreCredential()
+        dropAndReconnect()
+        sender.receive(.pairingResult(.locked))
+        #expect(viewModel.phase == .searching)
+
+        viewModel.select(ipad)
+        sender.setConnected(true)
+        #expect(viewModel.phase == .enteringCode(attemptsLeft: nil))
+    }
+
+    @Test func aResumeRejectionOutsideAResumeIsIgnored() {
+        reachVerifying()
+        sender.receive(.resumeRejected)
+        #expect(viewModel.phase == .verifying)
+    }
+
+    @Test func commandsAreBlockedWhileResuming() {
+        pairAndStoreCredential()
+        dropAndReconnect()
+        let before = sender.sent.count
+        viewModel.next()
+        viewModel.previous()
+        #expect(sender.sent.count == before)
+    }
+
+    @Test func aDropWhileResumingKeepsTheCredential() {
+        pairAndStoreCredential()
+        dropAndReconnect()
+        sender.setConnected(false)
+        #expect(viewModel.phase == .searching)
+        #expect(viewModel.notice == "Conexão perdida")
+
+        viewModel.select(ipad)
+        sender.setConnected(true)
+        #expect(viewModel.phase == .verifying)
+        #expect(sender.sent.last == .resumeRequest)
+    }
 }
