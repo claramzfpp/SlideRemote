@@ -22,12 +22,17 @@ final class RemoteViewModel: ObservableObject {
     @Published private(set) var peers: [DiscoveredPeer]
     /// Aviso mostrado na busca depois de uma falha (bloqueio, queda, convite recusado).
     @Published private(set) var notice: String?
+    /// `true` enquanto retoma uma sessão anterior sem pedir o código.
+    @Published private(set) var isResuming = false
     /// Erro de formato do código digitado.
     @Published private(set) var codeError: String?
 
     private let sender: RemoteCommandSending
     private let movementSource: MovementSource
     private var cancellables = Set<AnyCancellable>()
+    /// Credenciais de reconexão por nome de iPad, só em memória: somem quando o app fecha.
+    private var credentials: [String: HexToken] = [:]
+    private var currentPeerName: String?
 
     init(sender: RemoteCommandSending, movementSource: MovementSource) {
         self.sender = sender
@@ -52,6 +57,7 @@ final class RemoteViewModel: ObservableObject {
         guard phase == .searching else { return }
         notice = nil
         codeError = nil
+        currentPeerName = peer.name
         phase = .connecting(peerName: peer.name)
         sender.connect(to: peer)
     }
@@ -59,6 +65,7 @@ final class RemoteViewModel: ObservableObject {
     func cancelConnection() {
         guard phase != .searching else { return }
         sender.disconnect()
+        isResuming = false
         phase = .searching
     }
 
@@ -75,8 +82,15 @@ final class RemoteViewModel: ObservableObject {
 
     private func connectionChanged(isConnected: Bool) {
         switch (phase, isConnected) {
-        case (.connecting, true):
-            phase = .enteringCode(attemptsLeft: nil)
+        case (.connecting(let name), true):
+            if credentials[name] != nil {
+                // Já pareado com este iPad nesta execução: tenta retomar sem pedir o código.
+                isResuming = true
+                phase = .verifying
+                sender.send(.resumeRequest)
+            } else {
+                phase = .enteringCode(attemptsLeft: nil)
+            }
         case (.connecting, false):
             fallBackToSearching(notice: "O iPad recusou ou não respondeu")
         case (.searching, _), (_, true):
@@ -87,20 +101,59 @@ final class RemoteViewModel: ObservableObject {
     }
 
     private func handle(_ message: RemoteMessage) {
-        guard case .pairingResult(let result) = message, phase == .verifying else { return }
+        switch message {
+        case .pairingResult(let result): handlePairingResult(result)
+        case .credential(let token): store(token)
+        case .resumeChallenge(let nonce): answer(nonce)
+        case .resumeRejected: resumeWasRejected()
+        case .command, .pair, .resumeRequest, .resumeProof:
+            break // mensagens do iPhone para o iPad; ignoradas se vierem de volta
+        }
+    }
+
+    private func handlePairingResult(_ result: PairingResult) {
+        guard phase == .verifying else { return }
         switch result {
         case .accepted:
+            isResuming = false
             phase = .paired
         case .rejected(let attemptsLeft):
             phase = .enteringCode(attemptsLeft: attemptsLeft)
         case .locked:
+            forgetCredential()
             sender.disconnect()
             fallBackToSearching(notice: "Pareamento bloqueado. Peça um novo código no iPad.")
         }
     }
 
+    /// O iPad só emite a credencial depois de autenticar; fora disso é ignorada.
+    private func store(_ token: HexToken) {
+        guard phase == .verifying || phase == .paired, let name = currentPeerName else { return }
+        credentials[name] = token
+    }
+
+    /// Responde ao desafio com uma prova (HMAC); a credencial em si nunca é enviada.
+    private func answer(_ nonce: HexToken) {
+        guard phase == .verifying, isResuming,
+              let name = currentPeerName, let credential = credentials[name] else { return }
+        sender.send(.resumeProof(ResumeProof.compute(credential: credential, nonce: nonce)))
+    }
+
+    private func resumeWasRejected() {
+        guard phase == .verifying, isResuming else { return }
+        forgetCredential()
+        isResuming = false
+        codeError = "A sessão anterior expirou. Digite o código mostrado no iPad."
+        phase = .enteringCode(attemptsLeft: nil)
+    }
+
+    private func forgetCredential() {
+        if let name = currentPeerName { credentials[name] = nil }
+    }
+
     private func fallBackToSearching(notice: String) {
         self.notice = notice
+        isResuming = false
         codeError = nil
         phase = .searching
     }

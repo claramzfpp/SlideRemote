@@ -38,7 +38,7 @@ struct RemoteView: View {
         case .enteringCode(let attemptsLeft):
             codeEntry(attemptsLeft: attemptsLeft)
         case .verifying:
-            ProgressView("Verificando código...")
+            ProgressView(viewModel.isResuming ? "Retomando conexão..." : "Verificando código...")
         case .paired:
             pairedControls
         }
