@@ -67,13 +67,17 @@ struct PresentationViewModelTests {
     private let second = PairingCode("222222")!
     private let wrong = PairingCode("999999")!
 
-    private func makeViewModel(timeout: Duration = .seconds(25)) -> (PresentationViewModel, () -> Int) {
+    private func makeViewModel(
+        timeout: Duration = .seconds(25),
+        pairingTimeout: Duration = .seconds(60)
+    ) -> (PresentationViewModel, () -> Int) {
         var queue = [first, second, PairingCode("333333")!, PairingCode("444444")!]
         var calls = 0
         let viewModel = PresentationViewModel(
             receiver: receiver,
             pdfLoader: StubPDFLoader(),
             invitationTimeout: timeout,
+            pairingTimeout: pairingTimeout,
             codeGenerator: {
                 calls += 1
                 return queue.isEmpty ? PairingCode.generate() : queue.removeFirst()
@@ -257,5 +261,87 @@ struct PresentationViewModelTests {
         receiver.simulate(.pairingResult(.accepted))
         #expect(!viewModel.isAuthenticated)
         #expect(receiver.sent.isEmpty)
+    }
+
+    // MARK: - Prazo de pareamento e desconexão manual
+
+    @Test func approvedButNeverConnectedIsReleasedAfterPairingTimeout() async throws {
+        let (viewModel, _) = makeViewModel(pairingTimeout: .milliseconds(50))
+        receiver.simulateInvitation(from: "iPhone")
+        viewModel.respondToInvitation(accept: true)
+        try await Task.sleep(for: .milliseconds(400))
+        #expect(receiver.disconnectCount == 1)
+        #expect(viewModel.pairingCode == nil)
+        #expect(!viewModel.isAuthenticated)
+    }
+
+    @Test func connectedWithoutCodeIsDisconnectedAfterPairingTimeout() async throws {
+        let (viewModel, _) = makeViewModel(pairingTimeout: .milliseconds(50))
+        connectApproved(viewModel)
+        try await Task.sleep(for: .milliseconds(400))
+        #expect(receiver.disconnectCount == 1)
+        #expect(viewModel.pairingCode == nil)
+        #expect(!viewModel.isConnected)
+    }
+
+    @Test func authenticatingBeforeTheDeadlineKeepsTheConnection() async throws {
+        let (viewModel, _) = makeViewModel(pairingTimeout: .milliseconds(100))
+        connectApproved(viewModel)
+        receiver.simulate(.pair(first))
+        try await Task.sleep(for: .milliseconds(400))
+        #expect(receiver.disconnectCount == 0)
+        #expect(viewModel.isAuthenticated)
+        #expect(viewModel.isConnected)
+    }
+
+    @Test func connectionDropCancelsThePairingDeadline() async throws {
+        let (viewModel, _) = makeViewModel(pairingTimeout: .milliseconds(100))
+        connectApproved(viewModel)
+        receiver.simulateConnection(false)
+        try await Task.sleep(for: .milliseconds(400))
+        #expect(receiver.disconnectCount == 0)
+        _ = viewModel
+    }
+
+    @Test func lockingTheSessionCancelsThePairingDeadline() async throws {
+        let (viewModel, _) = makeViewModel(pairingTimeout: .milliseconds(100))
+        connectApproved(viewModel)
+        for _ in 0..<3 { receiver.simulate(.pair(wrong)) }
+        #expect(receiver.disconnectCount == 1)
+        try await Task.sleep(for: .milliseconds(400))
+        #expect(receiver.disconnectCount == 1)
+        _ = viewModel
+    }
+
+    @Test func disconnectingThePhoneEndsAnAuthenticatedSession() {
+        let (viewModel, _) = makeViewModel()
+        loadPDF(viewModel)
+        connectApproved(viewModel)
+        receiver.simulate(.pair(first))
+        viewModel.disconnectPhone()
+
+        #expect(receiver.disconnectCount == 1)
+        #expect(!viewModel.isConnected)
+        #expect(!viewModel.isAuthenticated)
+        #expect(viewModel.pairingCode == nil)
+
+        receiver.simulate(.command(.next))
+        #expect(viewModel.presentation?.currentIndex == 0)
+    }
+
+    @Test func disconnectingThePhoneReleasesAnApprovedPeerThatNeverConnected() {
+        let (viewModel, _) = makeViewModel()
+        receiver.simulateInvitation(from: "iPhone")
+        viewModel.respondToInvitation(accept: true)
+        viewModel.disconnectPhone()
+
+        #expect(receiver.disconnectCount == 1)
+        #expect(viewModel.pairingCode == nil)
+    }
+
+    @Test func disconnectingWithNobodyAroundDoesNothing() {
+        let (viewModel, _) = makeViewModel()
+        viewModel.disconnectPhone()
+        #expect(receiver.disconnectCount == 0)
     }
 }
