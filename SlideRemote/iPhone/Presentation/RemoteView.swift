@@ -21,6 +21,10 @@ struct RemoteView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.gray.opacity(0.2))
         .onAppear { viewModel.startListeningToWatch() }
+        // Depois de um código errado o campo volta vazio, para não reenviar o mesmo palpite sem querer.
+        .onChange(of: viewModel.phase) { _, newPhase in
+            if case .enteringCode = newPhase { codeInput = "" }
+        }
         .onDisappear { viewModel.stopListeningToWatch() }
     }
 
