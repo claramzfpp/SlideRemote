@@ -26,8 +26,11 @@ final class PresentationViewModel: ObservableObject {
     private let codeGenerator: () -> PairingCode
     private let invitationTimeout: Duration
     private let pairingTimeout: Duration
+    private let throttleTemplate: CommandThrottle
+    private let clock: () -> ContinuousClock.Instant
 
     private var session: PairingSession?
+    private var throttle: CommandThrottle
     private var invitationTimeoutTask: Task<Void, Never>?
     private var pairingDeadlineTask: Task<Void, Never>?
 
@@ -36,12 +39,17 @@ final class PresentationViewModel: ObservableObject {
         pdfLoader: PDFLoading,
         invitationTimeout: Duration = .seconds(25),
         pairingTimeout: Duration = .seconds(60),
+        throttle: CommandThrottle = CommandThrottle(maxCommands: 10, window: .seconds(1)),
+        clock: @escaping () -> ContinuousClock.Instant = { .now },
         codeGenerator: @escaping () -> PairingCode = { PairingCode.generate() }
     ) {
         self.receiver = receiver
         self.pdfLoader = pdfLoader
         self.invitationTimeout = invitationTimeout
         self.pairingTimeout = pairingTimeout
+        self.throttleTemplate = throttle
+        self.throttle = throttle
+        self.clock = clock
         self.codeGenerator = codeGenerator
 
         receiver.onInvitation = { [weak self] name in self?.handleInvitation(from: name) }
@@ -113,6 +121,11 @@ final class PresentationViewModel: ObservableObject {
         case .command(let command):
             // Antes de autenticar, ou sem PDF, não há o que aplicar.
             guard isAuthenticated else { return }
+            // Um peer (ou bug) que dispare comandos em rajada não pode passar vários slides de uma vez.
+            guard throttle.allow(at: clock()) else {
+                AppLog.connectivity.notice("Comando descartado por limite de taxa")
+                return
+            }
             presentation?.apply(command)
         case .pairingResult: break // mensagem do iPad para o iPhone; ignorada se vier de volta
         }
@@ -142,6 +155,7 @@ final class PresentationViewModel: ObservableObject {
     private func startNewSession() {
         let code = codeGenerator()
         session = PairingSession(code: code)
+        throttle = throttleTemplate
         pairingCode = code
         isAuthenticated = false
     }

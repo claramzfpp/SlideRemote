@@ -31,6 +31,7 @@ final class MultipeerCommandReceiver: NSObject, CommandReceiving {
     // Estado de convites: só é lido e escrito na main thread.
     private var pendingInvitation: (peer: MCPeerID, handler: (Bool, MCSession?) -> Void)?
     private var approvedPeer: MCPeerID? // aprovado, mas ainda conectando
+    private var activePeer: MCPeerID? // único peer cujas mensagens são repassadas
 
     override init() {
         mcSession = MCSession(peer: peerID, securityIdentity: nil, encryptionPreference: .required) // tráfego criptografado
@@ -52,6 +53,7 @@ final class MultipeerCommandReceiver: NSObject, CommandReceiving {
             self.pendingInvitation?.handler(false, nil)
             self.pendingInvitation = nil
             self.approvedPeer = nil
+            self.activePeer = nil
         }
     }
 
@@ -61,6 +63,7 @@ final class MultipeerCommandReceiver: NSObject, CommandReceiving {
             pendingInvitation = nil
             if accept {
                 approvedPeer = pending.peer
+                activePeer = pending.peer
                 pending.handler(true, mcSession)
             } else {
                 pending.handler(false, nil)
@@ -82,7 +85,10 @@ final class MultipeerCommandReceiver: NSObject, CommandReceiving {
     func disconnectPeer() {
         mcSession.disconnect()
         // Libera também quem foi aprovado mas nunca completou a conexão; senão a vaga ficaria presa.
-        DispatchQueue.main.async { self.approvedPeer = nil }
+        DispatchQueue.main.async {
+            self.approvedPeer = nil
+            self.activePeer = nil
+        }
     }
 }
 
@@ -118,6 +124,8 @@ extension MultipeerCommandReceiver: MCSessionDelegate {
         guard let message = RemoteMessage(data: data) else { return }
 
         DispatchQueue.main.async {
+            // Mesmo com um peer só por vez, mensagens de qualquer outro peer da sessão são descartadas.
+            guard peerID == self.activePeer else { return }
             self.onMessage?(message)
         }
     }
@@ -128,6 +136,7 @@ extension MultipeerCommandReceiver: MCSessionDelegate {
             // "Conectando" ainda não é queda: avisar agora apagaria o código recém-criado.
             guard state != .connecting else { return }
             if self.approvedPeer == peerID { self.approvedPeer = nil }
+            if state == .notConnected, self.activePeer == peerID { self.activePeer = nil }
             self.onConnectionChange?(!session.connectedPeers.isEmpty)
         }
     }
