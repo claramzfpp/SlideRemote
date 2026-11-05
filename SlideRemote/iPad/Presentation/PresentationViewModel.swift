@@ -127,7 +127,10 @@ final class PresentationViewModel: ObservableObject {
                 return
             }
             presentation?.apply(command)
-        case .pairingResult: break // mensagem do iPad para o iPhone; ignorada se vier de volta
+        case .pairingResult, .credential, .resumeChallenge, .resumeRejected:
+            break // mensagens do iPad para o iPhone; ignoradas se vierem de volta
+        case .resumeRequest, .resumeProof:
+            break // retomada de sessão: tratada na próxima etapa
         }
     }
 
