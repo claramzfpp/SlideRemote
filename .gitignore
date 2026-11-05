@@ -1,0 +1,11 @@
+# macOS
+.DS_Store
+
+# Xcode: estado por usuário e build
+xcuserdata/
+*.xcuserstate
+DerivedData/
+build/
+
+# Claude Code: worktrees temporários dos agentes
+.claude/worktrees/
