@@ -10,7 +10,7 @@ struct PairingCode: Equatable, Sendable {
 
     let value: String
 
-    /// Falha se não forem exatamente 6 dígitos ASCII (0-9). Outros dígitos Unicode, sinais e espaços são recusados de propósito.
+    /// Fails unless it is exactly 6 ASCII digits (0-9). Other Unicode digits, signs and spaces are rejected on purpose.
     init?(_ value: String) {
         guard value.utf8.count == Self.length,
               value.utf8.allSatisfy({ (UInt8(ascii: "0")...UInt8(ascii: "9")).contains($0) }) else { return nil }
@@ -19,7 +19,7 @@ struct PairingCode: Equatable, Sendable {
 
     private static let upperBound = (0..<length).reduce(1) { acc, _ in acc * 10 }
 
-    /// Aceita 0...999_999 e completa com zeros à esquerda.
+    /// Accepts 0...999_999 and pads with leading zeros.
     init?(number: Int) {
         guard (0..<Self.upperBound).contains(number) else { return nil }
         let digits = String(number)
@@ -35,7 +35,7 @@ struct PairingCode: Equatable, Sendable {
         return generate(using: &generator)
     }
 
-    /// Compara sem parar no primeiro byte diferente, para não vazar quantos dígitos batem pelo tempo de resposta.
+    /// Compares without stopping at the first differing byte, so response time doesn't leak how many digits match.
     func matches(_ other: PairingCode) -> Bool {
         zip(value.utf8, other.value.utf8).reduce(UInt8(0)) { $0 | ($1.0 ^ $1.1) } == 0
     }

@@ -5,8 +5,8 @@
 
 import Foundation
 
-/// 128 bits aleatórios em 32 caracteres hexadecimais minúsculos.
-/// Serve de credencial de reconexão e de desafio (nonce).
+/// 128 random bits as 32 lowercase hexadecimal characters.
+/// Used as a reconnect credential and as a challenge (nonce).
 struct HexToken: Equatable, Sendable {
     static let length = 32
 
@@ -36,7 +36,7 @@ func isLowercaseHex(_ string: String, length: Int) -> Bool {
     }
 }
 
-/// Não para no primeiro byte diferente, para o tempo de resposta não revelar quantos bytes batem.
+/// Doesn't stop at the first differing byte, so response time doesn't reveal how many bytes match.
 func constantTimeEquals(_ a: String, _ b: String) -> Bool {
     let lhs = Array(a.utf8), rhs = Array(b.utf8)
     guard lhs.count == rhs.count else { return false }

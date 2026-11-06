@@ -2,7 +2,7 @@
 //  RemoteCommand.swift
 //  SlideRemote
 //
-//  Comandos que o iPhone envia ao iPad. Compartilhado pelos dois lados.
+//  Commands the iPhone sends to the iPad. Shared by both sides.
 //
 
 import Foundation

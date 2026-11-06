@@ -11,7 +11,7 @@ struct ResumeProofTests {
     private let ones = HexToken("11111111111111111111111111111111")!
 
     @Test func matchesKnownHMACSHA256Vectors() throws {
-        // Gerados com: echo -n <nonce> | openssl dgst -sha256 -hmac <credential>
+        // Generated with: echo -n <nonce> | openssl dgst -sha256 -hmac <credential>
         #expect(ResumeProof.compute(credential: zeros, nonce: ones).value
                 == "af46a312a09483576fda6c8b6dbee25b41c9f1fd23269385705797bf95c90d91")
 

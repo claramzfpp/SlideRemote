@@ -2,7 +2,7 @@
 //  PresentationView.swift
 //  SlideRemote
 //
-//  Tela do iPad: escolhe o PDF e mostra o slide controlado pelo iPhone.
+//  iPad screen: picks the PDF and shows the slide controlled by the iPhone.
 //
 
 import SwiftUI
@@ -25,11 +25,11 @@ struct PresentationView: View {
             }
         }
         .alert(
-            "Permitir \(viewModel.pendingInvitation ?? "") a controlar os slides?",
+            "Allow \(viewModel.pendingInvitation ?? "") to control the slides?",
             isPresented: invitationBinding
         ) {
-            Button("Permitir") { viewModel.respondToInvitation(accept: true) }
-            Button("Recusar", role: .cancel) { viewModel.respondToInvitation(accept: false) }
+            Button("Allow") { viewModel.respondToInvitation(accept: true) }
+            Button("Decline", role: .cancel) { viewModel.respondToInvitation(accept: false) }
         }
         .fileImporter(isPresented: $isImporterPresented, allowedContentTypes: [.pdf]) { result in
             if case .success(let url) = result {
@@ -41,12 +41,12 @@ struct PresentationView: View {
     private var invitationBinding: Binding<Bool> {
         Binding(
             get: { viewModel.pendingInvitation != nil },
-            // Fechar o alerta sem escolher conta como recusa; após uma resposta o convite já não existe.
+            // Dismissing the alert without choosing counts as a refusal; after a response the invitation no longer exists.
             set: { if !$0 { viewModel.respondToInvitation(accept: false) } }
         )
     }
 
-    // MARK: - Sem PDF
+    // MARK: - No PDF
 
     private var emptyScreen: some View {
         VStack(spacing: 24) {
@@ -69,7 +69,7 @@ struct PresentationView: View {
         .padding()
     }
 
-    // MARK: - Apresentando
+    // MARK: - Presenting
 
     private func slideScreen(document: PDFDocument, presentation: Presentation) -> some View {
         ZStack(alignment: .bottom) {
@@ -89,16 +89,16 @@ struct PresentationView: View {
                     .monospacedDigit()
 
                 if !viewModel.isAuthenticated {
-                    Label(viewModel.isConnected ? "Aguardando código no iPhone" : "iPhone desconectado",
+                    Label(viewModel.isConnected ? "Waiting for code on the iPhone" : "iPhone disconnected",
                           systemImage: "iphone.slash")
                 }
 
                 if canDisconnectPhone {
-                    Button("Desconectar iPhone", systemImage: "iphone.slash") { viewModel.disconnectPhone() }
+                    Button("Disconnect iPhone", systemImage: "iphone.slash") { viewModel.disconnectPhone() }
                         .labelStyle(.iconOnly)
                 }
 
-                Button("Fechar", systemImage: "xmark.circle") { viewModel.closePresentation() }
+                Button("Close", systemImage: "xmark.circle") { viewModel.closePresentation() }
                     .labelStyle(.iconOnly)
             }
             .font(.callout)
@@ -111,7 +111,7 @@ struct PresentationView: View {
         .background(Color.black)
     }
 
-    /// Disponível enquanto houver um iPhone aprovado, conectado ou não.
+    /// Available while there is an approved iPhone, connected or not.
     private var canDisconnectPhone: Bool {
         viewModel.isConnected || viewModel.pairingCode != nil
     }
@@ -119,7 +119,7 @@ struct PresentationView: View {
     @ViewBuilder
     private var disconnectButton: some View {
         if canDisconnectPhone {
-            Button("Desconectar iPhone", systemImage: "iphone.slash", role: .destructive) {
+            Button("Disconnect iPhone", systemImage: "iphone.slash", role: .destructive) {
                 viewModel.disconnectPhone()
             }
         }
@@ -131,11 +131,11 @@ struct PresentationView: View {
     }
 
     private var connectionText: String {
-        if viewModel.isAuthenticated { return "iPhone conectado" }
-        return viewModel.isConnected ? "Aguardando código no iPhone" : "Aguardando iPhone..."
+        if viewModel.isAuthenticated { return "iPhone connected" }
+        return viewModel.isConnected ? "Waiting for code on the iPhone" : "Waiting for iPhone..."
     }
 
-    /// Só aparece com o peer conectado e ainda não autenticado.
+    /// Only shown with the peer connected and not yet authenticated.
     private var codeToShow: PairingCode? {
         viewModel.isConnected && !viewModel.isAuthenticated ? viewModel.pairingCode : nil
     }
@@ -145,14 +145,14 @@ struct PresentationView: View {
         if let code = codeToShow {
             let spaced = String(code.value.prefix(3)) + " " + String(code.value.suffix(3))
             VStack(spacing: 8) {
-                Text("Digite no iPhone:")
+                Text("Enter on the iPhone:")
                     .font(.title3)
                 Text(spaced)
                     .font(.system(size: 72, weight: .bold, design: .monospaced))
                     .monospacedDigit()
             }
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel("Digite no iPhone o código \(code.value.map(String.init).joined(separator: " "))")
+            .accessibilityLabel("Enter the code on the iPhone: \(code.value.map(String.init).joined(separator: " "))")
         }
     }
 }

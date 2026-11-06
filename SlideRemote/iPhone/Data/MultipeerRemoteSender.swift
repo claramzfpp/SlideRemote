@@ -2,9 +2,9 @@
 //  MultipeerRemoteSender.swift
 //  SlideRemote
 //
-//  Procura iPads via Multipeer, convida só o que o usuário escolher e troca mensagens.
-//  Todo o estado mutável é acessado só na main thread; callbacks do MPC fazem hop para ela.
-//  Nunca registra o conteúdo das mensagens (inclui o código de pareamento).
+//  Browses for iPads via Multipeer, invites only the one the user picks and exchanges messages.
+//  All mutable state is accessed only on the main thread; MPC callbacks hop to it.
+//  Never logs message content (it includes the pairing code).
 //
 
 import MultipeerConnectivity
@@ -12,7 +12,7 @@ import Combine
 
 @MainActor
 final class MultipeerRemoteSender: NSObject, RemoteCommandSending {
-    /// O apresentador precisa aprovar o convite no iPad, então o prazo é generoso.
+    /// The presenter must approve the invitation on the iPad, so the timeout is generous.
     private static let invitationTimeout: TimeInterval = 30
 
     private let peersSubject = CurrentValueSubject<[DiscoveredPeer], Never>([])
@@ -28,9 +28,9 @@ final class MultipeerRemoteSender: NSObject, RemoteCommandSending {
     private let peerID: MCPeerID
     nonisolated private let session: MCSession
     private let browser: MCNearbyServiceBrowser
-    /// Mapa id estável -> MCPeerID dos iPads visíveis.
+    /// Map of stable id -> MCPeerID for the visible iPads.
     private var knownPeers: [(peer: DiscoveredPeer, mcPeer: MCPeerID)] = []
-    /// iPad convidado ou conectado; eventos de outros peers são ignorados.
+    /// Invited or connected iPad; events from other peers are ignored.
     private var targetPeer: MCPeerID?
     private var connectedPeer: MCPeerID?
 
@@ -61,7 +61,7 @@ final class MultipeerRemoteSender: NSObject, RemoteCommandSending {
         do {
             try session.send(message.data, toPeers: [peer], with: .reliable)
         } catch {
-            AppLog.connectivity.error("Erro ao enviar a mensagem: \(error.localizedDescription, privacy: .public)")
+            AppLog.connectivity.error("Error sending the message: \(error.localizedDescription, privacy: .public)")
         }
     }
 

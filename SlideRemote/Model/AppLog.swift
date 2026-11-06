@@ -3,7 +3,7 @@
 //  SlideRemote
 //
 //  Logs do sistema (os.Logger) no lugar de print. Nomes de dispositivos costumam ser o
-//  nome da pessoa, então entram sempre como `.private`; códigos de pareamento nunca são logados.
+//  person's name, so they are always logged as `.private`; pairing codes are never logged.
 //
 
 import OSLog

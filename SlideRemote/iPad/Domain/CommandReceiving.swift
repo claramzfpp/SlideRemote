@@ -2,21 +2,21 @@
 //  CommandReceiving.swift
 //  SlideRemote
 //
-//  Contrato de transporte do lado iPad: convites, mensagens e conexão do iPhone.
+//  Transport contract on the iPad side: invitations, messages and the iPhone connection.
 //
 
 import Foundation
 
 protocol CommandReceiving: AnyObject {
-    /// Sempre chamados na main thread.
+    /// Always called on the main thread.
     var onMessage: (@MainActor (RemoteMessage) -> Void)? { get set }
     var onConnectionChange: (@MainActor (Bool) -> Void)? { get set }
-    /// Só é chamado para convites que precisam de resposta do usuário, com o nome do peer.
+    /// Only called for invitations that need a user response, with the peer's name.
     var onInvitation: (@MainActor (String) -> Void)? { get set }
 
     func start()
     func stop()
-    /// Responde ao convite aguardando decisão. Sem convite pendente, não faz nada.
+    /// Responds to the invitation awaiting a decision. With no pending invitation, does nothing.
     func respondToInvitation(accept: Bool)
     func send(_ message: RemoteMessage)
     func disconnectPeer()

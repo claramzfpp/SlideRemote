@@ -2,20 +2,20 @@
 //  MultipeerCommandReceiver.swift
 //  SlideRemote
 //
-//  Roda no iPad: anuncia o serviço via MultipeerConnectivity e aceita o iPhone.
+//  Runs on the iPad: advertises the service via MultipeerConnectivity and accepts the iPhone.
 //
 
-import MultipeerConnectivity // comunicação peer-to-peer local, sem servidor ou internet
+import MultipeerConnectivity // local peer-to-peer communication, no server or internet
 /*
- um framework para comunicação direta entre dispositivos próximos, sem servidor e sem backend
- funciona entre iPhone, iPad e Mac
+ A framework for direct communication between nearby devices, with no server and no backend.
+ It works across iPhone, iPad and Mac.
 
- ele escolhe sozinho o meio de transporte disponível:
- - wi-Fi na mesma rede (infraestrutura)
- - peer-to-peer Wi-Fi (AWDL, parecido com o AirDrop), sem precisar de roteador
- - bluetooth
+ It picks the available transport on its own:
+ - Wi-Fi on the same network (infrastructure)
+ - peer-to-peer Wi-Fi (AWDL, similar to AirDrop), no router needed
+ - Bluetooth
 
- ele decide e troca de um para outro conforme a disponibilidade
+ It decides and switches between them depending on availability.
  */
 
 final class MultipeerCommandReceiver: NSObject, CommandReceiving {
@@ -24,18 +24,18 @@ final class MultipeerCommandReceiver: NSObject, CommandReceiving {
     var onInvitation: (@MainActor (String) -> Void)?
 
     private let serviceType = RemoteService.type
-    private let peerID = MCPeerID(displayName: UIDevice.current.name) // identidade do ipad na rede (definido como o nome do dispositivo)
-    private let mcSession: MCSession  // sessão de comunicação
-    private let mcAdvertiser: MCNearbyServiceAdvertiser // anunciador do serviço
+    private let peerID = MCPeerID(displayName: UIDevice.current.name) // the iPad's identity on the network (set to the device name)
+    private let mcSession: MCSession  // communication session
+    private let mcAdvertiser: MCNearbyServiceAdvertiser // service advertiser
 
-    // Estado de convites: só é lido e escrito na main thread.
+    // Invitation state: only read and written on the main thread.
     private var pendingInvitation: (peer: MCPeerID, handler: (Bool, MCSession?) -> Void)?
-    private var approvedPeer: MCPeerID? // aprovado, mas ainda conectando
-    private var activePeer: MCPeerID? // único peer cujas mensagens são repassadas
+    private var approvedPeer: MCPeerID? // approved, but still connecting
+    private var activePeer: MCPeerID? // the only peer whose messages are forwarded
 
     override init() {
-        mcSession = MCSession(peer: peerID, securityIdentity: nil, encryptionPreference: .required) // tráfego criptografado
-        mcAdvertiser = MCNearbyServiceAdvertiser(peer: peerID, discoveryInfo: nil, serviceType: serviceType) // o iphone procura exatamente esse identificador
+        mcSession = MCSession(peer: peerID, securityIdentity: nil, encryptionPreference: .required) // encrypted traffic
+        mcAdvertiser = MCNearbyServiceAdvertiser(peer: peerID, discoveryInfo: nil, serviceType: serviceType) // the iPhone looks for exactly this one identificador
         super.init()
         mcSession.delegate = self
         mcAdvertiser.delegate = self
@@ -43,7 +43,7 @@ final class MultipeerCommandReceiver: NSObject, CommandReceiving {
 
     func start() {
         mcAdvertiser.startAdvertisingPeer()
-        AppLog.connectivity.info("Anunciando o serviço \(self.serviceType, privacy: .public) como \(self.peerID.displayName, privacy: .private)")
+        AppLog.connectivity.info("Advertising service \(self.serviceType, privacy: .public) as \(self.peerID.displayName, privacy: .private)")
     }
 
     func stop() {
@@ -78,13 +78,13 @@ final class MultipeerCommandReceiver: NSObject, CommandReceiving {
         do {
             try mcSession.send(message.data, toPeers: peers, with: .reliable)
         } catch {
-            AppLog.connectivity.error("Erro ao enviar mensagem: \(error.localizedDescription, privacy: .public)")
+            AppLog.connectivity.error("Error sending message: \(error.localizedDescription, privacy: .public)")
         }
     }
 
     func disconnectPeer() {
         mcSession.disconnect()
-        // Libera também quem foi aprovado mas nunca completou a conexão; senão a vaga ficaria presa.
+        // Also releases a peer that was approved but never completed the connection; otherwise the slot would stay stuck.
         DispatchQueue.main.async {
             self.approvedPeer = nil
             self.activePeer = nil
@@ -96,7 +96,7 @@ final class MultipeerCommandReceiver: NSObject, CommandReceiving {
 
 extension MultipeerCommandReceiver: MCNearbyServiceAdvertiserDelegate {
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didReceiveInvitationFromPeer peerID: MCPeerID, withContext context: Data?, invitationHandler: @escaping (Bool, MCSession?) -> Void) {
-        AppLog.connectivity.info("Convite recebido de \(peerID.displayName, privacy: .private)")
+        AppLog.connectivity.info("Invitation received from \(peerID.displayName, privacy: .private)")
         DispatchQueue.main.async {
             let hasActivePeer = self.pendingInvitation != nil
                 || self.approvedPeer != nil
@@ -112,7 +112,7 @@ extension MultipeerCommandReceiver: MCNearbyServiceAdvertiserDelegate {
     }
 
     func advertiser(_ advertiser: MCNearbyServiceAdvertiser, didNotStartAdvertisingPeer error: Error) {
-        AppLog.connectivity.error("Erro ao anunciar: \(error.localizedDescription, privacy: .public)")
+        AppLog.connectivity.error("Error advertising: \(error.localizedDescription, privacy: .public)")
     }
 }
 
@@ -120,20 +120,20 @@ extension MultipeerCommandReceiver: MCNearbyServiceAdvertiserDelegate {
 
 extension MultipeerCommandReceiver: MCSessionDelegate {
     func session(_ session: MCSession, didReceive data: Data, fromPeer peerID: MCPeerID) {
-        // Conteúdo nunca é logado: pode ser o código de pareamento.
+        // Content is never logged: it may be the pairing code.
         guard let message = RemoteMessage(data: data) else { return }
 
         DispatchQueue.main.async {
-            // Mesmo com um peer só por vez, mensagens de qualquer outro peer da sessão são descartadas.
+            // Even with a single peer at a time, messages from any other peer in the session are discarded.
             guard peerID == self.activePeer else { return }
             self.onMessage?(message)
         }
     }
 
     func session(_ session: MCSession, peer peerID: MCPeerID, didChange state: MCSessionState) {
-        AppLog.connectivity.info("Estado da conexão com \(peerID.displayName, privacy: .private): \(state.rawValue, privacy: .public)")
+        AppLog.connectivity.info("Connection state with \(peerID.displayName, privacy: .private): \(state.rawValue, privacy: .public)")
         DispatchQueue.main.async {
-            // "Conectando" ainda não é queda: avisar agora apagaria o código recém-criado.
+            // "Connecting" is not a drop yet: notifying now would erase the freshly created code.
             guard state != .connecting else { return }
             if self.approvedPeer == peerID { self.approvedPeer = nil }
             if state == .notConnected, self.activePeer == peerID { self.activePeer = nil }

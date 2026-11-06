@@ -21,7 +21,7 @@ struct SecurityScopedPDFLoaderTests {
         return document.dataRepresentation() ?? Data()
     }
 
-    /// Devolve o erro lançado ou nil se carregou.
+    /// Returns the thrown error, or nil if it loaded.
     private func loadError(_ loader: SecurityScopedPDFLoader, _ url: URL) -> PDFLoadError? {
         do {
             _ = try loader.load(from: url)
@@ -62,7 +62,7 @@ struct SecurityScopedPDFLoaderTests {
     }
 
     @Test func rejectsContentThatIsNotAPDF() throws {
-        let url = try temporaryFile(Data("isto não é um pdf".utf8))
+        let url = try temporaryFile(Data("this is not a pdf".utf8))
         defer { try? FileManager.default.removeItem(at: url) }
 
         guard case .invalidDocument = loadError(SecurityScopedPDFLoader(), url) else {
@@ -80,6 +80,6 @@ struct SecurityScopedPDFLoaderTests {
     }
 
     @Test func tooLargeErrorHasAUserFacingMessage() {
-        #expect(PDFLoadError.fileTooLarge.errorDescription == "Esse PDF é grande demais para abrir.")
+        #expect(PDFLoadError.fileTooLarge.errorDescription == "This PDF is too large to open.")
     }
 }

@@ -6,8 +6,8 @@
 import CryptoKit
 import Foundation
 
-/// Prova de que o iPhone ainda tem a credencial, sem enviá-la: HMAC-SHA256(credencial, desafio).
-/// Um iPad falso que receba a prova de um desafio dele não consegue reaproveitá-la nem descobrir a credencial.
+/// Proof that the iPhone still has the credential, without sending it: HMAC-SHA256(credential, challenge).
+/// A fake iPad that receives the proof for its own challenge can't reuse it or discover the credential.
 struct ResumeProof: Equatable, Sendable {
     static let length = 64
 

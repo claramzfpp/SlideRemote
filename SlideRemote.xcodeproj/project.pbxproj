@@ -213,7 +213,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1610;
-				LastUpgradeCheck = 1610;
+				LastUpgradeCheck = 2710;
 				TargetAttributes = {
 					B56340AE2E7CFB3500B112F8 = {
 						CreatedOnToolsVersion = 16.1;
@@ -345,6 +345,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = PWMGJ535ZV;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -368,6 +369,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -408,6 +410,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = PWMGJ535ZV;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -424,6 +427,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -437,12 +441,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"SlideRemote/Preview Content\"";
-				DEVELOPMENT_TEAM = PWMGJ535ZV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SlideRemote/Info.plist;
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Permitir a conexão com o iPad para controlar os slides";
-				INFOPLIST_KEY_NSMotionUsageDescription = "Detectar o giro do pulso para avançar os slides";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Allow the connection to the iPad to control the slides";
+				INFOPLIST_KEY_NSMotionUsageDescription = "Detect the wrist twist to advance the slides";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -469,12 +472,11 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"SlideRemote/Preview Content\"";
-				DEVELOPMENT_TEAM = PWMGJ535ZV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = SlideRemote/Info.plist;
-				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Permitir a conexão com o iPad para controlar os slides";
-				INFOPLIST_KEY_NSMotionUsageDescription = "Detectar o giro do pulso para avançar os slides";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "Allow the connection to the iPad to control the slides";
+				INFOPLIST_KEY_NSMotionUsageDescription = "Detect the wrist twist to advance the slides";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -501,11 +503,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"SlideRemoteWatch/Preview Content\"";
-				DEVELOPMENT_TEAM = PWMGJ535ZV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = SlideRemote;
-				INFOPLIST_KEY_NSMotionUsageDescription = "Detectar o giro do pulso para avançar os slides";
+				INFOPLIST_KEY_NSMotionUsageDescription = "Detect the wrist twist to advance the slides";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = project.SlideRemote;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -532,11 +533,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"SlideRemoteWatch/Preview Content\"";
-				DEVELOPMENT_TEAM = PWMGJ535ZV;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = SlideRemote;
-				INFOPLIST_KEY_NSMotionUsageDescription = "Detectar o giro do pulso para avançar os slides";
+				INFOPLIST_KEY_NSMotionUsageDescription = "Detect the wrist twist to advance the slides";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = project.SlideRemote;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -561,7 +561,6 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = PWMGJ535ZV;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = project.SlideRemoteTests;
@@ -579,7 +578,6 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = PWMGJ535ZV;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = project.SlideRemoteTests;

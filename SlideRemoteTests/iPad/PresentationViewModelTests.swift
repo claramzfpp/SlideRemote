@@ -19,7 +19,7 @@ final class FakeCommandReceiver: CommandReceiving {
     private(set) var disconnectCount = 0
     private(set) var responses: [Bool] = []
 
-    // Espelha a regra do receiver real: um peer por vez.
+    // Mirrors the real receiver's rule: one peer at a time.
     private var hasPendingInvitation = false
     private var hasConnectedPeer = false
     private(set) var autoRejectedInvitations = 0
@@ -107,7 +107,7 @@ struct PresentationViewModelTests {
         viewModel.loadPDF(from: URL(fileURLWithPath: "/tmp/x.pdf"))
     }
 
-    // MARK: - Convite
+    // MARK: - Invitation
 
     @Test func startsTheReceiver() {
         _ = makeViewModel()
@@ -176,7 +176,7 @@ struct PresentationViewModelTests {
         #expect(viewModel.pairingCode == first)
     }
 
-    // MARK: - Comandos e pareamento
+    // MARK: - Commands and pairing
 
     @Test func connectedWithoutCodeIsNotAuthenticated() {
         let (viewModel, _) = makeViewModel()
@@ -261,7 +261,7 @@ struct PresentationViewModelTests {
     }
 
     @Test func invalidPayloadIsDiscardedByTheDecoder() {
-        // O receiver descarta o que não decodifica; aqui garantimos que o decoder recusa lixo.
+        // The receiver discards what doesn't decode; here we ensure the decoder rejects garbage.
         #expect(RemoteMessage(data: Data("lixo".utf8)) == nil)
         #expect(RemoteMessage(data: Data([0xFF, 0xFE])) == nil)
     }
@@ -274,7 +274,7 @@ struct PresentationViewModelTests {
         #expect(receiver.sent.isEmpty)
     }
 
-    // MARK: - Prazo de pareamento e desconexão manual
+    // MARK: - Pairing deadline and manual disconnect
 
     @Test func approvedButNeverConnectedIsReleasedAfterPairingTimeout() async throws {
         let (viewModel, _) = makeViewModel(pairingTimeout: .milliseconds(50))
@@ -356,7 +356,7 @@ struct PresentationViewModelTests {
         #expect(receiver.disconnectCount == 0)
     }
 
-    // MARK: - Limite de taxa
+    // MARK: - Rate limit
 
     @Test func commandsAboveTheRateLimitAreDropped() {
         var now = ContinuousClock.now
@@ -411,9 +411,9 @@ struct PresentationViewModelTests {
         #expect(viewModel.isConnected)
     }
 
-    // MARK: - Retomada de sessão (credencial em memória)
+    // MARK: - Session resume (in-memory credential)
 
-    /// Pareia com o código e devolve a viewModel já autenticada (credencial `t1` emitida).
+    /// Pairs with the code and returns the already-authenticated viewModel (credential `t1` issued).
     private func pairWithCode(_ viewModel: PresentationViewModel) {
         connectApproved(viewModel)
         receiver.simulate(.pair(first))
@@ -511,21 +511,21 @@ struct PresentationViewModelTests {
         pairWithCode(viewModel)
         reconnectApproved(viewModel)
         receiver.simulate(.resumeRequest)
-        receiver.simulate(.resumeProof(ResumeProof.compute(credential: t5, nonce: t2))) // errada, consome o desafio
-        receiver.simulate(.resumeProof(ResumeProof.compute(credential: t1, nonce: t2))) // certa, mas tarde demais
+        receiver.simulate(.resumeProof(ResumeProof.compute(credential: t5, nonce: t2))) // wrong, consumes the challenge
+        receiver.simulate(.resumeProof(ResumeProof.compute(credential: t1, nonce: t2))) // right, but too late
         #expect(receiver.sent.last == .resumeRejected)
         #expect(!viewModel.isAuthenticated)
     }
 
     @Test func rotatedCredentialInvalidatesTheOldOne() {
         let (viewModel, _) = makeViewModel()
-        pairWithCode(viewModel)                                  // credencial t1
+        pairWithCode(viewModel)                                  // credential t1
         reconnectApproved(viewModel)
-        receiver.simulate(.resumeRequest)                        // desafio t2
-        receiver.simulate(.resumeProof(ResumeProof.compute(credential: t1, nonce: t2))) // emite t3
+        receiver.simulate(.resumeRequest)                        // challenge t2
+        receiver.simulate(.resumeProof(ResumeProof.compute(credential: t1, nonce: t2))) // issues t3
 
         reconnectApproved(viewModel)
-        receiver.simulate(.resumeRequest)                        // desafio t4
+        receiver.simulate(.resumeRequest)                        // challenge t4
         receiver.simulate(.resumeProof(ResumeProof.compute(credential: t1, nonce: t4)))
         #expect(receiver.sent.last == .resumeRejected)
         #expect(!viewModel.isAuthenticated)
@@ -545,7 +545,7 @@ struct PresentationViewModelTests {
         let (viewModel, _) = makeViewModel()
         pairWithCode(viewModel)
         reconnectApproved(viewModel)
-        for _ in 0..<3 { receiver.simulate(.pair(wrong)) }       // trava
+        for _ in 0..<3 { receiver.simulate(.pair(wrong)) }       // locks
         reconnectApproved(viewModel)
         receiver.simulate(.resumeRequest)
         #expect(receiver.sent.last == .resumeRejected)

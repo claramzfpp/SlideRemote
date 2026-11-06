@@ -2,7 +2,7 @@
 //  RemoteView.swift
 //  SlideRemote
 //
-//  Tela do iPhone: escolhe o iPad, pede o código de pareamento e então mostra as setas dos slides.
+//  iPhone screen: picks the iPad, asks for the pairing code and then shows the slide arrows.
 //
 
 import SwiftUI
@@ -21,7 +21,7 @@ struct RemoteView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.gray.opacity(0.2))
         .onAppear { viewModel.startListeningToWatch() }
-        // Depois de um código errado o campo volta vazio, para não reenviar o mesmo palpite sem querer.
+        // After a wrong code the field comes back empty, to avoid resending the same guess by accident.
         .onChange(of: viewModel.phase) { _, newPhase in
             if case .enteringCode = newPhase { codeInput = "" }
         }
@@ -38,7 +38,7 @@ struct RemoteView: View {
         case .enteringCode(let attemptsLeft):
             codeEntry(attemptsLeft: attemptsLeft)
         case .verifying:
-            ProgressView(viewModel.isResuming ? "Retomando conexão..." : "Verificando código...")
+            ProgressView(viewModel.isResuming ? "Resuming connection..." : "Verifying code...")
         case .paired:
             pairedControls
         }
@@ -53,7 +53,7 @@ struct RemoteView: View {
                     .padding(.horizontal)
             }
             if viewModel.peers.isEmpty {
-                Label("Procurando iPad...", systemImage: "ipad.slash")
+                Label("Searching for iPad...", systemImage: "ipad.slash")
                     .font(.system(size: 20, weight: .bold, design: .rounded))
                     .foregroundStyle(.secondary)
             } else {
@@ -71,14 +71,14 @@ struct RemoteView: View {
 
     private var connecting: some View {
         VStack(spacing: 16) {
-            ProgressView("Aguardando o iPad permitir...")
-            Button("Cancelar", role: .cancel) { viewModel.cancelConnection() }
+            ProgressView("Waiting for the iPad to allow...")
+            Button("Cancel", role: .cancel) { viewModel.cancelConnection() }
         }
     }
 
     private func codeEntry(attemptsLeft: Int?) -> some View {
         VStack(spacing: 16) {
-            Text("Digite o código de 6 dígitos mostrado no iPad")
+            Text("Enter the 6-digit code shown on the iPad")
                 .multilineTextAlignment(.center)
             TextField("000000", text: $codeInput)
                 .keyboardType(.numberPad)
@@ -93,19 +93,20 @@ struct RemoteView: View {
                 Text(error).foregroundStyle(.red)
             }
             if let attemptsLeft {
-                Text("Código incorreto. Tentativas restantes: \(attemptsLeft)")
+                Text("Incorrect code. Attempts left: \(attemptsLeft)")
                     .foregroundStyle(.red)
             }
             Button("Confirmar") { viewModel.submitCode(codeInput) }
                 .buttonStyle(.borderedProminent)
-            Button("Cancelar", role: .cancel) { viewModel.cancelConnection() }
+            Button("Cancel", role: .cancel) { viewModel.cancelConnection() }
         }
         .padding()
+        //TODO: open the keyboard
     }
 
     private var pairedControls: some View {
         VStack {
-            Label("iPad conectado", systemImage: "ipad")
+            Label("iPad connected", systemImage: "ipad")
                 .font(.system(size: 20, weight: .bold, design: .rounded))
                 .foregroundStyle(.green)
                 .padding(.top)
@@ -115,7 +116,7 @@ struct RemoteView: View {
             HStack {
                 ArrowButton(
                     image: Image(systemName: "arrow.left"),
-                    accessibilityLabel: "Slide Anterior"
+                    accessibilityLabel: "Previous Slide"
                 ) {
                     viewModel.previous()
                 }
@@ -124,7 +125,7 @@ struct RemoteView: View {
 
                 ArrowButton(
                     image: Image(systemName: "arrow.right"),
-                    accessibilityLabel: "Próximo Slide"
+                    accessibilityLabel: "Next Slide"
                 ) {
                     viewModel.next()
                 }
@@ -179,8 +180,8 @@ struct ArrowButton: View {
 #Preview {
     ArrowButton(
         image: Image(systemName: "arrow.left"),
-        accessibilityLabel: "Slide Anterior"
+        accessibilityLabel: "Previous Slide"
     ) {
-        // preview: sem ação
+        // preview: no action
     }
 }

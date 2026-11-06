@@ -2,7 +2,7 @@
 //  RemoteViewModel.swift
 //  SlideRemote
 //
-//  Conduz o pareamento com o iPad e, depois dele, liga a tela aos comandos e aos movimentos do Watch.
+//  Drives pairing with the iPad and, after it, wires the screen to the commands and to the Watch's movements.
 //
 
 import Combine
@@ -20,17 +20,17 @@ enum PairingPhase: Equatable {
 final class RemoteViewModel: ObservableObject {
     @Published private(set) var phase: PairingPhase = .searching
     @Published private(set) var peers: [DiscoveredPeer]
-    /// Aviso mostrado na busca depois de uma falha (bloqueio, queda, convite recusado).
+    /// Notice shown in the search after a failure (lockout, drop, declined invitation).
     @Published private(set) var notice: String?
-    /// `true` enquanto retoma uma sessão anterior sem pedir o código.
+    /// `true` while resuming a previous session without asking for the code.
     @Published private(set) var isResuming = false
-    /// Erro de formato do código digitado.
+    /// Format error of the typed code.
     @Published private(set) var codeError: String?
 
     private let sender: RemoteCommandSending
     private let movementSource: MovementSource
     private var cancellables = Set<AnyCancellable>()
-    /// Credenciais de reconexão por nome de iPad, só em memória: somem quando o app fecha.
+    /// Reconnect credentials by iPad name, in memory only: they disappear when the app closes.
     private var credentials: [String: HexToken] = [:]
     private var currentPeerName: String?
 
@@ -51,7 +51,7 @@ final class RemoteViewModel: ObservableObject {
         sender.onMessage = { [weak self] in self?.handle($0) }
     }
 
-    // MARK: - Pareamento
+    // MARK: - Pairing
 
     func select(_ peer: DiscoveredPeer) {
         guard phase == .searching else { return }
@@ -72,7 +72,7 @@ final class RemoteViewModel: ObservableObject {
     func submitCode(_ input: String) {
         guard case .enteringCode = phase else { return }
         guard let code = PairingCode(input) else {
-            codeError = "Digite os 6 dígitos"
+            codeError = "Enter the 6 digits"
             return
         }
         codeError = nil
@@ -84,7 +84,7 @@ final class RemoteViewModel: ObservableObject {
         switch (phase, isConnected) {
         case (.connecting(let name), true):
             if credentials[name] != nil {
-                // Já pareado com este iPad nesta execução: tenta retomar sem pedir o código.
+                // Already paired with this iPad in this run: tries to resume without asking for the code.
                 isResuming = true
                 phase = .verifying
                 sender.send(.resumeRequest)
@@ -92,11 +92,11 @@ final class RemoteViewModel: ObservableObject {
                 phase = .enteringCode(attemptsLeft: nil)
             }
         case (.connecting, false):
-            fallBackToSearching(notice: "O iPad recusou ou não respondeu")
+            fallBackToSearching(notice: "The iPad declined or did not respond")
         case (.searching, _), (_, true):
             break
         case (_, false):
-            fallBackToSearching(notice: "Conexão perdida")
+            fallBackToSearching(notice: "Connection lost")
         }
     }
 
@@ -107,7 +107,7 @@ final class RemoteViewModel: ObservableObject {
         case .resumeChallenge(let nonce): answer(nonce)
         case .resumeRejected: resumeWasRejected()
         case .command, .pair, .resumeRequest, .resumeProof:
-            break // mensagens do iPhone para o iPad; ignoradas se vierem de volta
+            break // messages from the iPhone to the iPad; ignored if they come back
         }
     }
 
@@ -122,17 +122,17 @@ final class RemoteViewModel: ObservableObject {
         case .locked:
             forgetCredential()
             sender.disconnect()
-            fallBackToSearching(notice: "Pareamento bloqueado. Peça um novo código no iPad.")
+            fallBackToSearching(notice: "Pairing locked. Ask for a new code on the iPad.")
         }
     }
 
-    /// O iPad só emite a credencial depois de autenticar; fora disso é ignorada.
+    /// The iPad only issues the credential after authenticating; otherwise it is ignored.
     private func store(_ token: HexToken) {
         guard phase == .verifying || phase == .paired, let name = currentPeerName else { return }
         credentials[name] = token
     }
 
-    /// Responde ao desafio com uma prova (HMAC); a credencial em si nunca é enviada.
+    /// Answers the challenge with a proof (HMAC); the credential itself is never sent.
     private func answer(_ nonce: HexToken) {
         guard phase == .verifying, isResuming,
               let name = currentPeerName, let credential = credentials[name] else { return }
@@ -143,7 +143,7 @@ final class RemoteViewModel: ObservableObject {
         guard phase == .verifying, isResuming else { return }
         forgetCredential()
         isResuming = false
-        codeError = "A sessão anterior expirou. Digite o código mostrado no iPad."
+        codeError = "The previous session expired. Enter the code shown on the iPad."
         phase = .enteringCode(attemptsLeft: nil)
     }
 
@@ -158,7 +158,7 @@ final class RemoteViewModel: ObservableObject {
         phase = .searching
     }
 
-    // MARK: - Controle
+    // MARK: - Control
 
     func next() { sendCommand(.next) }
     func previous() { sendCommand(.previous) }
@@ -168,7 +168,7 @@ final class RemoteViewModel: ObservableObject {
         sender.send(.command(command))
     }
 
-    /// Cada movimento do Watch equivale a um `.next`.
+    /// Each Watch movement is equivalent to one `.next`.
     func startListeningToWatch() {
         movementSource.onMovementReceived = { [weak self] in
             MainActor.assumeIsolated { self?.next() }

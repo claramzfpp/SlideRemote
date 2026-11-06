@@ -2,7 +2,7 @@
 //  PDFLoading.swift
 //  SlideRemote
 //
-//  Contrato para carregar o PDF escolhido pelo usuário.
+//  Contract for loading the PDF chosen by the user.
 //
 
 import Foundation
@@ -20,11 +20,11 @@ enum PDFLoadError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .invalidDocument:
-            "Não foi possível abrir esse PDF."
+            "Could not open this PDF."
         case .fileTooLarge:
-            "Esse PDF é grande demais para abrir."
+            "This PDF is too large to open."
         case .readFailed(let reason):
-            "Erro ao ler o arquivo: \(reason)"
+            "Error reading the file: \(reason)"
         }
     }
 }

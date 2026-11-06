@@ -2,7 +2,7 @@
 //  PDFKitView.swift
 //  SlideRemote
 //
-//  Mostra uma página do PDF por vez. Quem muda de página é o controle remoto.
+//  Shows one PDF page at a time. The remote control is what changes pages.
 //
 
 import SwiftUI
@@ -17,7 +17,7 @@ struct PDFKitView: UIViewRepresentable {
         view.displayMode = .singlePage
         view.autoScales = true
         view.backgroundColor = .black
-        // O toque do usuário não deve rolar o slide: só o remoto controla.
+        // The user's touch must not scroll the slide: only the remote controls it.
         view.isUserInteractionEnabled = false
         return view
     }

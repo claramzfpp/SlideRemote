@@ -2,8 +2,8 @@
 //  RemoteMessage.swift
 //  SlideRemote
 //
-//  Tudo o que trafega entre iPhone e iPad. O formato é texto simples e fechado:
-//  qualquer payload fora da lista é descartado.
+//  Everything exchanged between iPhone and iPad. The format is plain, closed text:
+//  any payload outside the list is discarded.
 //
 
 import Foundation
@@ -13,15 +13,15 @@ enum RemoteMessage: Equatable, Sendable {
     case pair(PairingCode)
     case pairingResult(PairingResult)
 
-    /// iPad → iPhone, só depois de autenticar: credencial para retomar a sessão sem digitar o código.
+    /// iPad → iPhone, only after authenticating: credential to resume the session without typing the code.
     case credential(HexToken)
-    /// iPhone → iPad: quer retomar usando a credencial.
+    /// iPhone → iPad: wants to resume using the credential.
     case resumeRequest
-    /// iPad → iPhone: desafio aleatório.
+    /// iPad → iPhone: random challenge.
     case resumeChallenge(HexToken)
-    /// iPhone → iPad: resposta ao desafio.
+    /// iPhone → iPad: response to the challenge.
     case resumeProof(ResumeProof)
-    /// iPad → iPhone: retomada recusada; digite o código.
+    /// iPad → iPhone: resume refused; enter the code.
     case resumeRejected
 
     private static let pairPrefix = "pair:"

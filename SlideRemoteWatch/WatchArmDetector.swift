@@ -14,9 +14,9 @@ class WatchArmDetector: NSObject, ObservableObject {
     private let motionManager = CMMotionManager()
     private let connectivityManager = WatchConnectivityManager.shared
 
-    /// Valores medidos nos logs: o giro do pulso aparece no eixo x do giroscópio
-    /// (picos de 4 a 14 rad/s, com ~99% da rotação concentrada nesse eixo).
-    /// Só o sentido negativo conta; o sentido positivo é a volta do punho.
+    /// Values measured from the logs: the wrist twist shows up on the gyroscope's x axis
+    /// (peaks of 4 to 14 rad/s, with ~99% of the rotation concentrated on that axis).
+    /// Only the negative direction counts; the positive direction is the wrist returning.
     private static let twistThreshold = 4.0 // rad/s
     private static let minAxisDominance = 0.9
     private static let cooldown: TimeInterval = 1.0
@@ -27,7 +27,7 @@ class WatchArmDetector: NSObject, ObservableObject {
     func startMotionUpdates() {
         guard motionManager.isDeviceMotionAvailable else { return }
 
-        motionManager.deviceMotionUpdateInterval = 0.02 // 50 Hz: gestos rápidos de pulso duram ~100-200 ms
+        motionManager.deviceMotionUpdateInterval = 0.02 // 50 Hz: quick wrist gestures last ~100-200 ms
         motionManager.startDeviceMotionUpdates(to: .main) { [weak self] data, _ in
             guard let self, let data else { return }
             self.processWatchMotion(data)
@@ -44,7 +44,7 @@ class WatchArmDetector: NSObject, ObservableObject {
     private func processWatchMotion(_ motion: CMDeviceMotion) {
         guard !isCoolingDown else { return }
 
-        // Detecta giro do pulso: rotação rápida e quase toda no eixo x
+        // Detects a wrist twist: fast rotation, almost entirely on the x axis
         let rate = motion.rotationRate
         let rotation = sqrt(rate.x * rate.x + rate.y * rate.y + rate.z * rate.z)
         let isWristTwist = rate.x < -Self.twistThreshold
@@ -56,7 +56,7 @@ class WatchArmDetector: NSObject, ObservableObject {
         WKInterfaceDevice.current().play(.success)
         connectivityManager.sendMovement()
 
-        // Evita disparar várias vezes no mesmo gesto.
+        // Avoids firing several times for the same gesture.
         DispatchQueue.main.asyncAfter(deadline: .now() + Self.cooldown) { [weak self] in
             self?.isCoolingDown = false
         }

@@ -11,8 +11,8 @@ enum PairingResult: Equatable, Sendable {
     case locked
 }
 
-/// Estado do pareamento de um iPhone com o iPad. Depois de `maxAttempts` erros fica travado
-/// para sempre: um novo código só existe numa nova sessão.
+/// State of an iPhone's pairing with the iPad. After `maxAttempts` failures it is locked
+/// forever: a new code only exists in a new session.
 struct PairingSession: Sendable {
     private let code: PairingCode
     private let maxAttempts: Int

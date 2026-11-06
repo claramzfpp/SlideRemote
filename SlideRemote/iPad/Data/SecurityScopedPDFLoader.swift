@@ -2,14 +2,14 @@
 //  SecurityScopedPDFLoader.swift
 //  SlideRemote
 //
-//  Lê PDFs vindos do seletor de arquivos, que ficam fora do sandbox do app.
+//  Reads PDFs from the file picker, which live outside the app sandbox.
 //
 
 import Foundation
 import PDFKit
 
 struct SecurityScopedPDFLoader: PDFLoading {
-    /// O PDF inteiro é lido para a memória; o limite evita estourá-la com um arquivo gigante.
+    /// The whole PDF is read into memory; the limit avoids exhausting it with a huge file.
     static let defaultMaxFileSize = 200 * 1_024 * 1_024
 
     let maxFileSize: Int
@@ -28,7 +28,7 @@ struct SecurityScopedPDFLoader: PDFLoading {
 
         let data: Data
         do {
-            // Lê tudo para a memória enquanto o acesso está aberto.
+            // Reads everything into memory while access is open.
             data = try Data(contentsOf: url)
         } catch {
             throw .readFailed(reason: error.localizedDescription)

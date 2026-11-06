@@ -2,7 +2,7 @@
 //  Presentation.swift
 //  SlideRemote
 //
-//  Estado de uma apresentação: slide atual e total, sempre dentro dos limites.
+//  State of a presentation: current slide and total, always within bounds.
 //
 
 import Foundation
@@ -15,7 +15,7 @@ struct Presentation {
         self.pageCount = max(pageCount, 0)
     }
 
-    /// Número do slide para exibir (começa em 1).
+    /// Slide number to display (starts at 1).
     var currentPage: Int { currentIndex + 1 }
 
     var isAtFirst: Bool { currentIndex == 0 }

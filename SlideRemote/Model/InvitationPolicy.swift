@@ -11,7 +11,7 @@ enum InvitationDecision: Equatable, Sendable {
 }
 
 enum InvitationPolicy {
-    /// Um iPhone por vez: enquanto houver um conectado ou aguardando aprovação, os outros são recusados sem incomodar o apresentador.
+    /// One iPhone at a time: while one is connected or awaiting approval, the others are declined without bothering the presenter.
     static func decide(hasActivePeer: Bool) -> InvitationDecision {
         hasActivePeer ? .reject : .askUser
     }

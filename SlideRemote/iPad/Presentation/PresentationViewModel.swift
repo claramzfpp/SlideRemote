@@ -16,9 +16,9 @@ final class PresentationViewModel: ObservableObject {
     @Published private(set) var isConnected = false
     @Published private(set) var isAuthenticated = false
     @Published private(set) var loadError: String?
-    /// Nome do iPhone aguardando permissão.
+    /// Name of the iPhone awaiting permission.
     @Published private(set) var pendingInvitation: String?
-    /// Código que o iPhone precisa digitar; nil quando nenhum peer foi aprovado.
+    /// Code the iPhone must type; nil when no peer has been approved.
     @Published private(set) var pairingCode: PairingCode?
 
     private let receiver: CommandReceiving
@@ -32,7 +32,7 @@ final class PresentationViewModel: ObservableObject {
 
     private var session: PairingSession?
     private var throttle: CommandThrottle
-    /// Credencial de reconexão: só em memória, nunca gravada. Some quando o app fecha, quando o apresentador desconecta o iPhone ou quando a sessão trava.
+    /// Reconnect credential: in memory only, never persisted. It disappears when the app closes, when the presenter disconnects the iPhone or when the session locks.
     private var credential: HexToken?
     private var pendingChallenge: HexToken?
     private var invitationTimeoutTask: Task<Void, Never>?
@@ -96,7 +96,7 @@ final class PresentationViewModel: ObservableObject {
         }
     }
 
-    /// Encerra a conexão com o iPhone atual (autenticado ou não) e libera a vaga para outro convite.
+    /// Ends the connection with the current iPhone (authenticated or not) and frees the slot for another invitation.
     func disconnectPhone() {
         guard session != nil || isConnected else { return }
         receiver.disconnectPeer()
@@ -126,9 +126,9 @@ final class PresentationViewModel: ObservableObject {
         switch message {
         case .pair(let attempt): handlePairing(attempt)
         case .command(let command):
-            // Antes de autenticar, ou sem PDF, não há o que aplicar.
+            // Before authenticating, or without a PDF, there is nothing to apply.
             guard isAuthenticated else { return }
-            // Um peer (ou bug) que dispare comandos em rajada não pode passar vários slides de uma vez.
+            // A peer (or bug) firing commands in a burst must not advance several slides at once.
             guard throttle.allow(at: clock()) else {
                 AppLog.connectivity.notice("Comando descartado por limite de taxa")
                 return
@@ -137,7 +137,7 @@ final class PresentationViewModel: ObservableObject {
         case .resumeRequest: handleResumeRequest()
         case .resumeProof(let proof): handleResumeProof(proof)
         case .pairingResult, .credential, .resumeChallenge, .resumeRejected:
-            break // mensagens do iPad para o iPhone; ignoradas se vierem de volta
+            break // messages from the iPad to the iPhone; ignored if they come back
         }
     }
 
@@ -160,9 +160,9 @@ final class PresentationViewModel: ObservableObject {
         }
     }
 
-    // MARK: - Retomada sem código
+    // MARK: - Resume without code
 
-    /// O iPhone pede para retomar. Só vale para um convite aprovado agora (o alerta continua valendo) e se houver credencial.
+    /// The iPhone asks to resume. Only valid for an invitation approved now (the alert still stands) and if there is a credential.
     private func handleResumeRequest() {
         guard !isAuthenticated else { return }
         guard session != nil, credential != nil else {
@@ -174,7 +174,7 @@ final class PresentationViewModel: ObservableObject {
         receiver.send(.resumeChallenge(nonce))
     }
 
-    /// Cada desafio vale uma única resposta, certa ou errada, para a prova não poder ser reaproveitada.
+    /// Each challenge allows a single answer, right or wrong, so the proof can't be reused.
     private func handleResumeProof(_ proof: ResumeProof) {
         guard !isAuthenticated else { return }
         guard session != nil, let credential, let nonce = pendingChallenge else {
@@ -190,7 +190,7 @@ final class PresentationViewModel: ObservableObject {
         authenticate()
     }
 
-    /// Autentica e troca a credencial: a anterior deixa de valer assim que a nova existe.
+    /// Authenticates and rotates the credential: the previous one stops being valid as soon as the new one exists.
     private func authenticate() {
         isAuthenticated = true
         pairingDeadlineTask?.cancel()
@@ -199,7 +199,7 @@ final class PresentationViewModel: ObservableObject {
         receiver.send(.credential(fresh))
     }
 
-    // MARK: - Sessão
+    // MARK: - Session
 
     private func startNewSession() {
         let code = codeGenerator()
@@ -209,7 +209,7 @@ final class PresentationViewModel: ObservableObject {
         isAuthenticated = false
     }
 
-    /// Quem foi aprovado precisa autenticar dentro do prazo; senão a vaga é liberada (inclusive se a conexão nunca completou).
+    /// Whoever was approved must authenticate within the deadline; otherwise the slot is released (including if the connection never completed).
     private func startPairingDeadline() {
         pairingDeadlineTask?.cancel()
         pairingDeadlineTask = Task { [weak self, pairingTimeout] in

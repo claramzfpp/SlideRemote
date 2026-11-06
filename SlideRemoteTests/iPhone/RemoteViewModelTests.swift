@@ -90,7 +90,7 @@ struct RemoteViewModelTests {
         reachEnteringCode()
         viewModel.submitCode("12345")
         #expect(sender.sent.isEmpty)
-        #expect(viewModel.codeError == "Digite os 6 dígitos")
+        #expect(viewModel.codeError == "Enter the 6 digits")
         #expect(viewModel.phase == .enteringCode(attemptsLeft: nil))
     }
 
@@ -117,28 +117,28 @@ struct RemoteViewModelTests {
         reachVerifying()
         sender.receive(.pairingResult(.locked))
         #expect(viewModel.phase == .searching)
-        #expect(viewModel.notice == "Pareamento bloqueado. Peça um novo código no iPad.")
+        #expect(viewModel.notice == "Pairing locked. Ask for a new code on the iPad.")
     }
 
     @Test func dropWhileEnteringCodeReturnsToSearching() {
         reachEnteringCode()
         sender.setConnected(false)
         #expect(viewModel.phase == .searching)
-        #expect(viewModel.notice == "Conexão perdida")
+        #expect(viewModel.notice == "Connection lost")
     }
 
     @Test func dropWhileVerifyingReturnsToSearching() {
         reachVerifying()
         sender.setConnected(false)
         #expect(viewModel.phase == .searching)
-        #expect(viewModel.notice == "Conexão perdida")
+        #expect(viewModel.notice == "Connection lost")
     }
 
     @Test func dropWhilePairedReturnsToSearching() {
         reachPaired()
         sender.setConnected(false)
         #expect(viewModel.phase == .searching)
-        #expect(viewModel.notice == "Conexão perdida")
+        #expect(viewModel.notice == "Connection lost")
     }
 
     @Test func refusedInvitationReturnsToSearchingWithMessage() {
@@ -146,7 +146,7 @@ struct RemoteViewModelTests {
         viewModel.select(ipad)
         sender.setConnected(false)
         #expect(viewModel.phase == .searching)
-        #expect(viewModel.notice == "O iPad recusou ou não respondeu")
+        #expect(viewModel.notice == "The iPad declined or did not respond")
     }
 
     @Test func cancelWhileConnectingDisconnectsQuietly() {
@@ -212,7 +212,7 @@ struct RemoteViewModelTests {
         #expect(viewModel.phase == .enteringCode(attemptsLeft: nil))
     }
 
-    // MARK: - Retomada sem código
+    // MARK: - Resume without code
 
     private let credential = HexToken("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")!
     private let rotated = HexToken("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")!
@@ -321,7 +321,7 @@ struct RemoteViewModelTests {
         dropAndReconnect()
         sender.setConnected(false)
         #expect(viewModel.phase == .searching)
-        #expect(viewModel.notice == "Conexão perdida")
+        #expect(viewModel.notice == "Connection lost")
 
         viewModel.select(ipad)
         sender.setConnected(true)

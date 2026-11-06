@@ -5,8 +5,8 @@
 
 import Foundation
 
-/// Janela deslizante: no máximo `maxCommands` comandos dentro de `window`.
-/// Tentativas negadas não contam, então um flood não prolonga o bloqueio além da janela.
+/// Sliding window: at most `maxCommands` commands within `window`.
+/// Denied attempts don't count, so a flood doesn't extend the block beyond the window.
 struct CommandThrottle: Sendable {
     private let maxCommands: Int
     private let window: Duration
