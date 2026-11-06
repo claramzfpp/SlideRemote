@@ -134,6 +134,15 @@ struct RemoteView: View {
 
             Spacer()
         }
+        .onAppear {
+            // this screen should be always on during the presentation, if it is not, will lose the iPad session
+            UIApplication.shared.isIdleTimerDisabled = true
+            AppLog.connectivity.info("Idle timer disabled. Keeping screen awake for core app activity.")
+        }
+        .onDisappear {
+            UIApplication.shared.isIdleTimerDisabled = false
+            AppLog.connectivity.info("Idle timer re-enabled. System can now put screen to sleep.")
+        }
     }
 }
 
